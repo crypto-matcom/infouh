@@ -1,7 +1,24 @@
 <%= map(:center => {
-  :latlng => [51.52238797921441, -0.08366235665359283],
+  :latlng => [23.13600916719015, -82.38191485404968],
   :zoom => 18
 }) %>
+
+<div id="sidebar"></div>
+
+<script type="text/javascript">
+
+	var sidebar = L.control.sidebar('sidebar', {
+	    closeButton: true,
+	    position: 'right'
+	});
+	map.addControl(sidebar);
+
+	map.on('click', function () {
+	    sidebar.show();
+      sidebar.setContent('<%= render partial: 'layout/forms/map' %>');
+	})
+
+</script>
 
 <script type="text/javascript">
 
@@ -11,7 +28,11 @@
 		  markerColor: 'red'
 		});
 
-		L.marker([23,-82], {icon: marker}).addTo(map);
+		L.marker([23.13600916719015, -82.38191485404968], {icon: marker}).addTo(map).on('click', function () {
+	        sidebar.toggle();
+	        sidebar.setContent('Hello World');
+	    });
+
 </script>
 
 <script type="text/javascript">

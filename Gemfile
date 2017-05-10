@@ -24,6 +24,7 @@ gem 'twitter-bootstrap-rails'
 gem 'semantic-ui-sass'
 gem 'leaflet-rails'
 gem 'leaflet-awesome-markers-rails', '~> 2.0'
+gem 'leaflet-sidebar-rails'
 
 group :development, :test do
   gem 'byebug', platform: :mri

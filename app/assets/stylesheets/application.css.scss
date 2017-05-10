@@ -13,6 +13,7 @@
  *= require_tree .
  *= require_self
  *= require leaflet
+ *= require 'L.Control.Sidebar'
  */
   $import-google-fonts: false;
   @import "semantic-ui";
