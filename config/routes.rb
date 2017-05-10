@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'gab/hello'
+
+  get 'test/home'
+
+  get 'test/hola'
+
   resources :sources
   get 'welcome/dashboard'
   get 'welcome/query'
