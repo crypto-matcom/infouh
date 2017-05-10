@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   get 'welcome/map'
 
   root to: 'welcome#dashboard'
-  match 'marker/create' => 'welcome#mark', as: 'create_marker_form', via: :post
+  match 'map/point' => 'map#point', as: 'create_map_point', via: :post
 end
