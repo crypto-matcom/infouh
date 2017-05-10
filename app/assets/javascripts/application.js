@@ -15,4 +15,5 @@
 //= require twitter/bootstrap
 //= require semantic-ui
 //= require turbolinks
+//= require leaflet
 //= require_tree .

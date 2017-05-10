@@ -22,6 +22,7 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'twitter-bootstrap-rails'
 gem 'semantic-ui-sass'
+gem 'leaflet-rails'
 
 group :development, :test do
   gem 'byebug', platform: :mri
