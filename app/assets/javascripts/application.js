@@ -16,4 +16,5 @@
 //= require semantic-ui
 //= require turbolinks
 //= require leaflet
+//= require leaflet.awesome-markers
 //= require_tree .
