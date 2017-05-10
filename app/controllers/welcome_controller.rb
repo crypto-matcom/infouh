@@ -25,7 +25,23 @@ class WelcomeController < ApplicationController
       end
       send_data @image, type: "image/jpg"
     else
-      # @markers = Marker.all
+      @markers = Marker.all
     end
   end
+
+  def mark
+    @marker = Marker.new(marker_params)
+    respond_to do |format|
+      if @marker.save
+        # format.json { render status: :ok }
+      else
+        # format.json { render status: :status: :unprocessable_entity }
+      end
+    end
+  end
+
+  private
+    def marker_params
+      params.require(:marker).permit(:name, :source, :query, :lat, :lng, :color, :icon)
+    end
 end

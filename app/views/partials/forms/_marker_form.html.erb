@@ -1,0 +1,14 @@
+<%= form_tag create_marker_form_path, class: "ui form", remote: true do %>
+  <input type="text" name="marker[name]" placeholder="Name" value="Unknow place">
+  <select class="" name="marker[source]">
+    <% Source.all.each do |s| %>
+      <option value="<%= s.id %>"><%= s.name %></option>
+    <% end %>
+  </select>
+  <input type="text" name="marker[query]" value="" placeholder="SQL query">
+  <input type="hidden" name="marker[lat]" value="23">
+  <input type="hidden" name="marker[lng]" value="-82">
+  <input type="text" name="marker[color]" value="red" placeholder="Color">
+  <input type="text" name="marker[icon]" value="knight" placeholder="Icon">
+  <%= submit_tag "Create" %>
+<% end %>

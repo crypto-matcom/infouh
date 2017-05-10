@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510050403) do
+ActiveRecord::Schema.define(version: 20170510052900) do
+
+  create_table "markers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "query"
+    t.float    "lat"
+    t.float    "lng"
+    t.integer  "source_id"
+    t.string   "color"
+    t.string   "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id"], name: "index_markers_on_source_id"
+  end
 
   create_table "sources", force: :cascade do |t|
     t.string   "adapter"

@@ -13,8 +13,11 @@
 	});
 	map.addControl(sidebar);
 
-	map.on('click', function () {
+	map.on('click', function (e) {
 	    sidebar.show();
+      sidebar.content('');
+      $('marker[lat]').attr('value', e.latlng.lat);
+      $('marker[lng]').attr('value', e.latlng.lng);
 	})
 
 </script>
@@ -31,13 +34,5 @@
 	        sidebar.toggle();
 	        sidebar.setContent('Hello World');
 	    });
-
-</script>
-
-<script type="text/javascript">
-
-	map.on('click', function(e) {
-	    alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
-	});
 
 </script>

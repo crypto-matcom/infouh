@@ -6,6 +6,5 @@ Rails.application.routes.draw do
   get 'welcome/map'
 
   root to: 'welcome#dashboard'
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  match 'marker/create' => 'welcome#mark', as: 'create_marker_form', via: :post
 end
