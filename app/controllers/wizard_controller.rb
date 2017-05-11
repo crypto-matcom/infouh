@@ -16,7 +16,7 @@ class WizardController < ApplicationController
   end
 
   def columns
-    @columns = [["table1", "column1", "int"],["table2", "column2", "int"]]
+    @columns = [["table1", [['columns1', 'int'],['columns2', 'string']]], ["table3", [['columns3', 'date']]]]
     respond_to do |format|
       format.json { render json: @columns }
     end
