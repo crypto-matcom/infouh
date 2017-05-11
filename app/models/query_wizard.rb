@@ -129,9 +129,7 @@ class QueryWizard
     end
 
     def TableBuilder connectionString, c
-      c.each do |t|
-
-      end
+      c.first
     end
 
     def ConditionBuilder connectionString, c
@@ -161,27 +159,27 @@ class QueryWizard
       "#{c["func"]}(#{c["column"]}) #{SingleOperators()[c["type"]]} #{ Quotes c["value"], c["value_type"] }"
     end
 
-    public
+  public
 
-      def SingleOperators
-        return {
-          "equal" => "=",
-          "lower" => "<",
-          "greater" => ">",
-          "like" => "LIKE",
-          "distinct" => "<>",
-          "lowerequal" => "<=",
-          "greaterequal" => ">=" ,
-        }
-      end
+    def SingleOperators
+      return {
+        "equal" => "=",
+        "lower" => "<",
+        "greater" => ">",
+        "like" => "LIKE",
+        "distinct" => "<>",
+        "lowerequal" => "<=",
+        "greaterequal" => ">=" ,
+      }
+    end
 
-      def SQLFuncitons
-        return [
-          "AVG", "COUNT", "FIRST", "LAST",
-          "MAX", "MIN", "SUM", "UCASE", "LCASE",
-          "MID", "LEN", "ROUND", "NOW", "FORMAT"
-        ]
-      end
+    def SQLFunctions
+      return [
+        "AVG", "COUNT", "FIRST", "LAST",
+        "MAX", "MIN", "SUM", "UCASE", "LCASE",
+        "MID", "LEN", "ROUND", "NOW", "FORMAT"
+      ]
+    end
 end
 
 class String

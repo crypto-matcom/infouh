@@ -20,7 +20,7 @@ function formGenerator(prefix, element){
   }).done(function(response) {
     html = '<form class="{class}" action="{action}" method="post" id="{id}">\n'.supplant({
       id: prefixStr(prefix,formControls.tags.mainForm),
-      action: 'wizard/query',
+      action: 'wizard/test',
       class: 'ui form'
     });
     html+= '\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
@@ -273,7 +273,7 @@ function simpleColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response, 'method');
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n'
     html+= '\t<input type="hidden" name="{name}" value="single">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
@@ -303,7 +303,7 @@ function functionColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response, 'method');
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
@@ -311,8 +311,11 @@ function functionColumnGenerate(prefix, metadata){
         prefix: prefix
       })
     });
-    html+= '\t\t<option value="MAX">MAX</option>';
-    html+= '\t\t<option value="MIN">MIN</option>';
+    for (func of response[2]) {
+      html+= '\t\t<option value="{func}">{func}</option>'.supplant({
+        func: func
+      });
+    }
     html+= '\t</select>\n';
     html+= '\t<input type="hidden" name="{name}" value="function">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
@@ -342,7 +345,7 @@ function aliasColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response, 'method');
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
@@ -350,8 +353,11 @@ function aliasColumnGenerate(prefix, metadata){
         prefix: prefix
       })
     });
-    html+= '\t\t<option value="MAX">MAX</option>';
-    html+= '\t\t<option value="MIN">MIN</option>';
+    for (func of response[2]) {
+      html+= '\t\t<option value="{func}">{func}</option>'.supplant({
+        func: func
+      });
+    }
     html+= '\t</select>\n';
     html+= '\t<input type="text" name="{name}" placeholder="Alias">'.supplant({
       name: '{prefix}[columns][column{counter}][alias]'.supplant({
@@ -396,7 +402,7 @@ function simpleConditionGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response, 'method');
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
@@ -404,8 +410,11 @@ function simpleConditionGenerate(prefix, metadata){
         prefix: prefix
       })
     });
-    html+= '\t\t<option value="equal">Equal</option>\n';
-    html+= '\t\t<option value="lower">Lower</option>\n';
+    for (operator of response[1]) {
+      html+= '\t\t<option value="{operator}">{operator}</option>'.supplant({
+        operator: operator
+      });
+    }
     html+= '\t</select>\n';
     html+= '\n<div id="{id}"></div>'.supplant({
       id: "{prefix}{counter}{name}".supplant({
@@ -444,7 +453,7 @@ function betweenConditionGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response, 'method');
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<input type="hidden" name="{name}" value="between">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
