@@ -1,4 +1,4 @@
-<%= form_tag create_marker_form_path, class: "ui form", remote: true do %>
+<%= form_tag create_marker_path, class: "ui form", remote: true do %>
   <input type="text" name="marker[name]" placeholder="Name" value="Unknow place">
   <select class="" name="marker[source]">
     <% Source.all.each do |s| %>

@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  get 'gab/hello'
-
-  get 'test/home'
-
-  get 'test/hola'
-
   resources :sources
   get 'welcome/dashboard'
   get 'welcome/query'
@@ -12,5 +6,6 @@ Rails.application.routes.draw do
   get 'welcome/map'
 
   root to: 'welcome#dashboard'
-  match 'map/point' => 'map#point', as: 'create_map_point', via: :post
+  match 'map/new' => 'map#new', as: 'create_marker', via: :post
+  match 'wizard/test' => 'wizard#test', as: 'show_query', via: :post
 end

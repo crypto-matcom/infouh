@@ -1,37 +1,31 @@
-<%= form_tag create_map_point_path, class: 'ui form' do %>
+<%= form_tag show_query_path, class: 'ui form' do %>
   <input type="text" name="prefix[tables][]" value="table1, table2, table3">
 
-  <input type="select" name="prefix[columns][column1][column]" value="column1">
-  <input type="hidden" name="prefix[columns][column1][table]" value="table1">
+  <input type="select" name="prefix[columns][column1][column]" value="table1.column1">
   <input type="hidden" name="prefix[columns][column1][type]" value="single">
 
-  <input type="text" name="prefix[columns][column4][column]" value="column4">
-  <input type="text" name="prefix[columns][column4][table]" value="table1">
+  <input type="text" name="prefix[columns][column4][column]" value="table1.column4">
   <input type="text" name="prefix[columns][column4][type]" value="function">
-  <input type="text" name="prefix[columns][column4][function]" value="MAX">
+  <input type="text" name="prefix[columns][column4][func]" value="MAX">
 
-  <input type="text" name="prefix[columns][column5][column]" value="column1">
-  <input type="text" name="prefix[columns][column5][table]" value="table1">
+  <input type="text" name="prefix[columns][column5][column]" value="table1.column1">
   <input type="text" name="prefix[columns][column5][type]" value="function">
-  <input type="text" name="prefix[columns][column5][function]" value="MIN">
+  <input type="text" name="prefix[columns][column5][func]" value="MIN">
   <input type="text" name="prefix[columns][column5][alias]" value="alias">
 
-  <input type="text" name="prefix[conditions][condition1][column]" value="column1">
-  <input type="text" name="prefix[conditions][condition1][table]" value="table1">
+  <input type="text" name="prefix[conditions][condition1][column]" value="table1.column1">
   <input type="text" name="prefix[conditions][condition1][type]" value="equal">
   <input type="text" name="prefix[conditions][condition1][value]" value="hola">
   <input type="text" name="prefix[conditions][condition1][value_type]" value="string">
 
-  <input type="text" name="prefix[conditions][condition2][column]" value="column1">
-  <input type="text" name="prefix[conditions][condition2][table]" value="table1">
+  <input type="text" name="prefix[conditions][condition2][column]" value="table1.column1">
   <input type="text" name="prefix[conditions][condition2][type]" value="between">
   <input type="text" name="prefix[conditions][condition2][value][value1][value]" value="hola">
   <input type="text" name="prefix[conditions][condition2][value][value1][type]" value="string">
   <input type="text" name="prefix[conditions][condition2][value][value2][value]" value="hola">
   <input type="text" name="prefix[conditions][condition2][value][value2][type]" value="string">
 
-  <input type="text" name="prefix[conditions][condition3][column]" value="column1">
-  <input type="text" name="prefix[conditions][condition3][table]" value="table1">
+  <input type="text" name="prefix[conditions][condition3][column]" value="table1.column1">
   <input type="text" name="prefix[conditions][condition3][type]" value="inclusion">
   <input type="text" name="prefix[conditions][condition3][value][value1][value]" value="hola">
   <input type="text" name="prefix[conditions][condition3][value][value1][type]" value="string">
@@ -39,23 +33,21 @@
   <input type="text" name="prefix[conditions][condition3][value][value2][type]" value="string">
   <input type="text" name="prefix[conditions][condition3][value_type]" value="array">
 
-  <input type="text" name="prefix[conditions][condition4][column]" value="column1">
-  <input type="text" name="prefix[conditions][condition4][table]" value="table1">
+  <input type="text" name="prefix[conditions][condition4][column]" value="table1.column1">
   <input type="text" name="prefix[conditions][condition4][type]" value="inclusion">
   <input type="text" name="prefix[conditions][condition4][value]" value="{json}">
 
-  <input type="text" name="prefix[groups][group1][column]" value="column">
-  <input type="text" name="prefix[groups][group1][table]" value="table">
+  <input type="text" name="prefix[groups][group1][column]" value="table1.column">
 
-  <input type="text" name="prefix[having][having1][table]" value="table">
-  <input type="text" name="prefix[having][having1][column]" value="column">
-  <input type="text" name="prefix[having][having1][func]" value="MIN">
-  <input type="text" name="prefix[having][having1][type]" value="equal">
-  <input type="text" name="prefix[having][having1][value]" value="5">
-  <input type="text" name="prefix[having][having1][value_type]" value="string">
+  <input type="text" name="prefix[having][having1][column]" value="table1.column">
+  <input type="text" name="prefix[having][having1][func]" value="table">
+  <input type="text" name="prefix[having][having1][type]" value="table">
+  <input type="text" name="prefix[having][having1][value]" value="table">
+  <input type="text" name="prefix[having][having1][value_type]" value="table">
 
-  <input type="text" name="prefix[options][option1][table]" value="table">
-  <input type="text" name="prefix[options][option1][column]" value="column">
-  <input type="text" name="prefix[options][option1][type]" value="ASC">
+  <input type="text" name="prefix[orders][order1][column]" value="table0.column0">
+  <input type="text" name="prefix[orders][order1][type]" value="ASC">
+
+  <input type="text" name="prefix[limit]" value="5">
   <%= submit_tag "Send" %>
 <% end %>
