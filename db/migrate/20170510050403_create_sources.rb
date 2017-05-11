@@ -4,6 +4,7 @@ class CreateSources < ActiveRecord::Migration[5.0]
       t.string :adapter
       t.string :database
       t.string :host
+      t.string :name
       t.string :username
       t.string :password
 

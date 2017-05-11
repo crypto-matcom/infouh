@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20170510052900) do
     t.string   "adapter"
     t.string   "database"
     t.string   "host"
+    t.string   "name"
     t.string   "username"
     t.string   "password"
     t.datetime "created_at", null: false

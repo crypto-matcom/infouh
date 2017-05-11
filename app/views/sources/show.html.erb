@@ -4,6 +4,8 @@
 </div>
 
 <dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @source.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:adapter) %>:</strong></dt>
   <dd><%= @source.adapter %></dd>
   <dt><strong><%= model_class.human_attribute_name(:database) %>:</strong></dt>

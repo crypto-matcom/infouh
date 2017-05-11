@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:adapter) %></th>
       <th><%= model_class.human_attribute_name(:database) %></th>
       <th><%= model_class.human_attribute_name(:host) %></th>
@@ -19,6 +20,7 @@
     <% @sources.each do |source| %>
       <tr>
         <td><%= link_to source.id, source_path(source) %></td>
+        <td><%= source.name %></td>
         <td><%= source.adapter %></td>
         <td><%= source.database %></td>
         <td><%= source.host %></td>
