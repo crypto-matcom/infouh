@@ -1,4 +1,4 @@
-<form class="" action="index.html" method="post" id="query1form" onclick="Delete(this)">
+<!-- <form class="" action="index.html" method="post" id="query1form" onclick="Delete(this)">
   <select class="" name="" onchange="formContentGenerator('query1')">
     <option value="">Option</option>
     <option value="">Option</option>
@@ -12,113 +12,104 @@
       <option value="">Option</option>
       <option value="">Option</option>
     </select>
-    <div class="query1formcontentdata">
-      <div class="" id="query1formcolumns">
+    <div class="query1formcontentdata"> -->
+      <!-- <div class="" id="query1formcolumns">
         <div onclick="simpleColumnGenerate('query1')">Simple</div>
         <div onclick="functionColumnGenerate('query1')">Function</div>
         <div onclick="aliasColumnGenerate('query1')">Alias Function</div>
-        <!-- Append with delete -->
+
+
       </div>
       <div class="" id="query1formconditions">
         <div onclick="simpleConditionGenerate('query1')">Simple</div>
         <div onclick="betweenConditionGenerate('query1')">Between</div>
         <div onclick="includeConditionGenerate('query1')">Inclusion</div>
         <div onclick="includeConditionGenerate2('query1')">Nested Query</div>
-        <!-- Append with delete -->
+
+
       </div>
       <div class="" id="query1formgroups">
         <div onclick="groupGenerate('query1')">Group</div>
-        <!-- Append with delete -->
+
 
       </div>
       <div class="" id="query1formhaving">
         <div onclick="havingGenerate('query1')">Having</div>
-        <!-- Append with delete -->
+
 
       </div>
       <div class="" id="query1formorders">
         <div onclick="orderGenerate('query1')">Order</div>
-        <!-- Append with delete -->
+
 
       </div>
       <div class="" id="query1formlimits">
         <div onclick="limitGenerate('query1')">Limit</div>
-        <!-- Append with delete -->
-      </div>
-    </div>
+
+
+      </div> -->
+    <!-- </div>
   </div>
   <input type="submit" value="Send Data">
-</form>
+</form> -->
+
+<div id='example'></div>
 
 <script type="text/javascript">
 
-function formContentGenerator(prefix){
-  html = '<br>'
-  html+= '<br>'
+console.log(formGenerator('query', document.getElementById('example')));
+
+console.log(formContentGenerator('query', null));
+
+console.log(formContentDataGenerator('query', null));
+
+
+function simpleColumnGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function formContentDataGenerator(prefix){
-  html = '<br>'
-  html+= '<br>'
+function functionColumnGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function simpleColumnGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function aliasColumnGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function functionColumnGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function simpleConditionGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function aliasColumnGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function betweenConditionGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function simpleConditionGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function includeConditionGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function betweenConditionGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function includeConditionGenerate2(prefix, metadata){
+  html = ''
   return html
 }
-function includeConditionGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function groupGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function includeConditionGenerate2(prefix){
-  html = '<br>'
-  html+= '<br>'
+function havingGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function groupGenerate(prefix){
-  html = '<br>'
-  html+= '<br>'
+function orderGenerate(prefix, metadata){
+  html = ''
   return html
 }
-function query1formhaving(prefix){
-  html = '<br>'
-  html+= '<br>'
-  return html
-}
-function query1formorders(prefix){
-  html = '<br>'
-  html+= '<br>'
-  return html
-}
-function query1formlimits(prefix){
-  html = '<br>'
-  html+= '<br>'
+function limitGenerate(prefix, metadata){
+  html = ''
   return html
 }
 
-function Delete(element) {
-  element.remove();
+function selectedOptions(element){
+  return ["ABC"].join(",");
 }
 </script>
