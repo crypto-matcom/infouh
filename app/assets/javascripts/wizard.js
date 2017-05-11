@@ -21,28 +21,33 @@ function formGenerator(prefix, element){
   html+= '\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
     prefix: prefix
   });
-  html+= '\t<select class="{class}" name="{name}" onchange="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
-    name: prefixStr(prefix, "[source]"),
-    prefix: prefix,
-    class: ""
-  });
-  for (source of [['ABC', 1], ['CDF', 2]]) {
-    html+= '\t\t<option value="{value}">{name}</option>\n'.supplant({
-      value: source[1],
-      name: source[0],
-    });
-  }
-  html+= '\t</select>\n'
-  html+= '\t<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.content)
-  });
-  html+= '\t<input type="submit" value="{button}">\n'.supplant({
-    button: "Submit"
-  });
-  html+= '</form>';
 
-  element.innerHTML = html;
-  return html;
+  $.post('/wizard/connections',{
+    connecitons: 'true'
+  }).done(function(response) {
+    html+= '\t<select class="{class}" name="{name}" onclick="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
+      name: prefixStr(prefix, "[source]"),
+      prefix: prefix,
+      class: ""
+    });
+    for (source of response) {
+      html+= '\t\t<option value="{value}">{name}</option>\n'.supplant({
+        value: source[1],
+        name: source[0],
+      });
+    }
+    html+= '\t</select>\n'
+    html+= '\t<div id="{id}"></div>\n'.supplant({
+      id: prefixStr(prefix, formControls.tags.content)
+    });
+    html+= '\t<input type="submit" value="{button}">\n'.supplant({
+      button: "Submit"
+    });
+    html+= '</form>';
+
+    document.getElementById(element).innerHTML = html;
+    console.log(html);
+  });
 }
 
 function formContentGenerator(prefix, element){
@@ -51,18 +56,23 @@ function formContentGenerator(prefix, element){
     prefix: prefix,
     class: ""
   });
-  for (table of ["table1", "table2"]) {
-    html+= '\t<option value="{value}">{value}</option>\n'.supplant({
-      value: table,
-    });
-  }
-  html+= '</select>\n';
-  html+= '<div id="{id}"></div>'.supplant({
-    id: prefixStr(prefix, formControls.tags.contentData)
-  });
+  $.post('/wizard/tables', {
+    id: element.selectedIndex.value
+  }).done(function (response) {
 
-  document.getElementById(prefixStr(prefix, formControls.tags.content)).innerHTML = html;
-  return html
+    for (table of response) {
+      html+= '\t<option value="{value}">{value}</option>\n'.supplant({
+        value: table,
+      });
+    }
+    html+= '</select>\n';
+    html+= '<div id="{id}"></div>'.supplant({
+      id: prefixStr(prefix, formControls.tags.contentData)
+    });
+
+    document.getElementById(prefixStr(prefix, formControls.tags.content)).innerHTML = html;
+    console.log(html);
+  });
 }
 
 function formContentDataGenerator(prefix, element){
@@ -171,5 +181,5 @@ function formContentDataGenerator(prefix, element){
   });
 
   document.getElementById(prefixStr(prefix, formControls.tags.contentData)).innerHTML = html
-  return html
+  console.log(html);
 }
