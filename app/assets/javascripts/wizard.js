@@ -55,7 +55,6 @@ function wizardGenerator(prefix, element, modal, title, perform){
         prefix: prefix
       });
     }
-
     html+= '\t\t\t\t\t\t<select class="{class}" name="{name}" onclick="wizardContentGenerator(\'{prefix}\', this, \'{modal}\')">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
       prefix: prefix,
@@ -91,7 +90,8 @@ function wizardGenerator(prefix, element, modal, title, perform){
 
 function wizardContentGenerator(prefix, element, modal){
   $.post('/wizard/tables', {
-    id: element.selectedIndex.value
+    id: element.selectedIndex.value,
+    data: false
   }).done(function (response) {
     html = '\t<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\')" multiple="true" placeholder="Select Tables">\n'.supplant({
       name: prefixStr(prefix, "[tables][]"),

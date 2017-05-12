@@ -28,7 +28,7 @@ class QueryWizard
   end
 
   def Run options, connectionStrings
-    Query connectionString[options["source"]], QueryBuilder(connectionString[options["source"]], options)
+    Query connectionStrings[options["source"]], QueryBuilder(connectionStrings[options["source"]], options)
   end
 
   def Query connectionString, sql
@@ -37,6 +37,7 @@ class QueryWizard
   end
 
   def ConformQuery connectionString, options
+    CreateContext connectionString
     QueryBuilder connectionString, options
   end
 
@@ -51,7 +52,16 @@ class QueryWizard
 
   private
     def GetDynamicDbContext dbInfo
-      return ActiveRecord::Base.establish_connection dbInfo
+      connection = Class.new ActiveRecord::Base do
+        self.abstract_class = true
+      end
+      Object.const_set "DynamicContent#{getCounter}", connection
+      connection.establish_connection dbInfo
+    end
+
+    def getCounter
+      @counter ||= 1
+      @counter += 1
     end
 
     def CreateRelationshipTable dbInfo
@@ -160,16 +170,15 @@ class QueryWizard
     end
 
   public
-
     def SingleOperators
       return {
-        "equal" => "=",
-        "lower" => "<",
-        "greater" => ">",
-        "like" => "LIKE",
-        "distinct" => "<>",
-        "lowerequal" => "<=",
-        "greaterequal" => ">=" ,
+        "Equal" => "=",
+        "Lower" => "<",
+        "Greater" => ">",
+        "Like" => "LIKE",
+        "Distinct" => "<>",
+        "LowerEqual" => "<=",
+        "GreaterEqual" => ">=" ,
       }
     end
 
