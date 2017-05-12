@@ -7,6 +7,11 @@ String.prototype.supplant = function (o) {
     );
 };
 
+function sanitize(val){
+  var split1 = val.split(']').join('');
+  return split1.split('[').join('');
+}
+
 function prefixStr(prefix, string) {
   return prefix + string;
 }

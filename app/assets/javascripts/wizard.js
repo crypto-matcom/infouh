@@ -15,17 +15,17 @@ formControls = {
   }
 }
 
-function wizardGenerator(prefix, element, modals, title, perform){
+function wizardGenerator(prefix, element, modal, title, perform){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
     controlId = '{prefix}{tag}'.supplant({
       tag: formControls.tags.control,
-      prefix: prefix
+      prefix: sanitize(prefix)
     })
     modalId = '{prefix}{tag}'.supplant({
       tag: formControls.tags.modal,
-      prefix: prefix
+      prefix: sanitize(prefix)
     })
 
     control = '<div id="{id}">\n'.supplant({
@@ -50,12 +50,16 @@ function wizardGenerator(prefix, element, modals, title, perform){
     html+='\t\t\t</div>\n';
     html+='\t\t\t<div class="modal-body">\n';
 
-    html+= '\t\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
-      prefix: prefix
-    });
-    html+= '\t\t\t\t\t<select class="{class}" name="{name}" onclick="wizardContentGenerator(\'{prefix}\', this)">\n'.supplant({
+    if(perform){
+      html+= '\t\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
+        prefix: prefix
+      });
+    }
+
+    html+= '\t\t\t\t\t<select class="{class}" name="{name}" onclick="wizardContentGenerator(\'{prefix}\', this, \'{modal}\')">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
       prefix: prefix,
+      modal: modal,
       class: ""
     });
     for (source of response) {
@@ -66,7 +70,7 @@ function wizardGenerator(prefix, element, modals, title, perform){
     }
     html+= '\t\t\t\t\t</select>\n'
     html+= '\t\t\t\t\t<div id="{id}"></div>\n'.supplant({
-      id: prefixStr(prefix, formControls.tags.content)
+      id: prefixStr(sanitize(prefix), formControls.tags.content)
     });
 
     html+='\t\t\t</div>\n';
@@ -81,20 +85,18 @@ function wizardGenerator(prefix, element, modals, title, perform){
     html+='</div>\n';
 
     $('#{id}'.supplant({id: element})).append(control);
-    $('#{id}'.supplant({id: modals})).append(html);
-
-    console.log(control);
-    console.log(html);
+    $('#{id}'.supplant({id: modal})).append(html);
   });
 }
 
-function wizardContentGenerator(prefix, element){
+function wizardContentGenerator(prefix, element, modal){
   $.post('/wizard/tables', {
     id: element.selectedIndex.value
   }).done(function (response) {
-    html = '<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this)" multiple="true" placeholder="Select Tables">\n'.supplant({
+    html = '<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\')" multiple="true" placeholder="Select Tables">\n'.supplant({
       name: prefixStr(prefix, "[tables][]"),
       prefix: prefix,
+      modal: modal,
       class: ""
     });
     for (table of response) {
@@ -104,15 +106,15 @@ function wizardContentGenerator(prefix, element){
     }
     html+= '</select>\n';
     html+= '<div id="{id}"></div>'.supplant({
-      id: prefixStr(prefix, formControls.tags.contentData)
+      id: prefixStr(sanitize(prefix), formControls.tags.contentData)
     });
 
-    document.getElementById(prefixStr(prefix, formControls.tags.content)).innerHTML = html;
+    document.getElementById(prefixStr(sanitize(prefix), formControls.tags.content)).innerHTML = html;
 
   });
 }
 
-function wizardContentDataGenerator(prefix, element){
+function wizardContentDataGenerator(prefix, element, modal){
   // COLUMNS
   html = '<div class="{class}">\n'.supplant({
     class: ""
@@ -134,7 +136,7 @@ function wizardContentDataGenerator(prefix, element){
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.columns)
+    id: prefixStr(sanitize(prefix), formControls.tags.columns)
   });
   // CONDITIONS
   html+= '<div class="{class}">\n'.supplant({
@@ -155,14 +157,15 @@ function wizardContentDataGenerator(prefix, element){
     prefix: prefix,
     name: "Inclusion"
   });
-  html+= '\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\')">{name}</div>\n'.supplant({
+  html+= '\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
+    name: "Nested Query",
     prefix: prefix,
-    name: "Nested Query"
+    modal: modal
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.conditions)
+    id: prefixStr(sanitize(prefix), formControls.tags.conditions)
   });
   // GROUPS
   html+= '<div class="{class}">\n'.supplant({
@@ -175,7 +178,7 @@ function wizardContentDataGenerator(prefix, element){
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.groups)
+    id: prefixStr(sanitize(prefix), formControls.tags.groups)
   });
   // HAVING
   html+= '<div class="{class}">\n'.supplant({
@@ -188,7 +191,7 @@ function wizardContentDataGenerator(prefix, element){
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.having)
+    id: prefixStr(sanitize(prefix), formControls.tags.having)
   });
   // ORDERS
   html+= '<div class="{class}">\n'.supplant({
@@ -201,7 +204,7 @@ function wizardContentDataGenerator(prefix, element){
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.orders)
+    id: prefixStr(sanitize(prefix), formControls.tags.orders)
   });
   // LIMIT
   html+= '<div class="{class}">\n'.supplant({
@@ -214,10 +217,10 @@ function wizardContentDataGenerator(prefix, element){
   });
   html+= '</div>\n';
   html+= '<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(prefix, formControls.tags.limit)
+    id: prefixStr(sanitize(prefix), formControls.tags.limit)
   });
 
-  document.getElementById(prefixStr(prefix, formControls.tags.contentData)).innerHTML = html
+  document.getElementById(prefixStr(sanitize(prefix), formControls.tags.contentData)).innerHTML = html
 
 }
 
@@ -320,7 +323,7 @@ function simpleColumnGenerate(prefix, metadata){
     });
 
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.columns)})).append(html);
 
     counter++;
   })
@@ -362,7 +365,7 @@ function functionColumnGenerate(prefix, metadata){
     });
 
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.columns)})).append(html);
 
     counter++;
   })
@@ -410,7 +413,7 @@ function aliasColumnGenerate(prefix, metadata){
     });
 
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.columns)})).append(html);
 
     counter++;
   })
@@ -461,7 +464,7 @@ function simpleConditionGenerate(prefix, metadata){
       })
     });
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.conditions)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
 
     counter++;
   })
@@ -506,13 +509,56 @@ function betweenConditionGenerate(prefix, metadata){
       })
     });
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.conditions)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
     console.log(html);
     counter++;
   })
 }
 
+function includeConditionGenerate2(prefix, metadata, modal){
+  $.post('wizard/columns', {
+    tables: metadata
+  }).done(function (response) {
+    html = '<div class="{class}">\n'.supplant({
+      class: ""
+    });
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[conditions][condition{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= optionsGenerator(response[0], 'method');
+    html+= '\t</select>\n'
+    html+= '\t<input type="hidden" name="{name}" value="inclusion">\n'.supplant({
+      name: '{prefix}[conditions][condition{counter}][type]'.supplant({
+        counter: counter,
+        prefix: prefix
+      })
+    });
+    html+= '\t<input type="hidden" name="{name}" value="query">\n'.supplant({
+      name: '{prefix}[conditions][condition{counter}][value_type]'.supplant({
+        counter: counter,
+        prefix: prefix
+      })
+    });
+    html+= '\t<div id="{id}"></div>'.supplant({
+      id: prefixStr('nestedQuery', counter)
+    });
+    html+= '</div>\n'
 
+    next_prefix = '{prefix}[conditions][condition{counter}][value]'.supplant({
+      counter: counter,
+      prefix: prefix
+    });
+
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
+    wizardGenerator(next_prefix, prefixStr('nestedQuery', counter), modal, 'Nested Query', false);
+
+    counter++;
+  })
+}
 
 function groupGenerate(prefix, metadata){
   $.post('wizard/columns', {
@@ -532,7 +578,7 @@ function groupGenerate(prefix, metadata){
     html+= '\t</select>\n'
 
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.groups)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.groups)})).append(html);
 
     counter++;
   })
@@ -595,7 +641,7 @@ function havingGenerate(prefix, metadata){
       })
     });
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.having)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.having)})).append(html);
     console.log(html);
     counter++;
   })
@@ -630,7 +676,7 @@ function orderGenerate(prefix, metadata){
     html+= '\t</select>\n';
 
     html+= '</div>\n'
-    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.orders)})).append(html);
+    $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.orders)})).append(html);
     console.log(html);
     counter++;
   })
@@ -644,5 +690,5 @@ function limitGenerate(prefix, metadata){
     name: prefixStr(prefix, '[limit]')
   });
   html+= '</div>\n'
-  document.getElementById(prefixStr(prefix, formControls.tags.limit)).innerHTML = html;
+  document.getElementById(prefixStr(sanitize(prefix), formControls.tags.limit)).innerHTML = html;
 }
