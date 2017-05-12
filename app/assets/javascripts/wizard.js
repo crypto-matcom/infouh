@@ -14,7 +14,7 @@ formControls = {
   }
 }
 
-function formGenerator(prefix, element){
+function formGenerator(prefix, element, modals){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
@@ -23,7 +23,7 @@ function formGenerator(prefix, element){
       action: 'wizard/test',
       class: 'ui form'
     });
-    html+= '\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
+    html = '\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
       prefix: prefix
     });
     html+= '\t<select class="{class}" name="{name}" onclick="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
@@ -44,7 +44,7 @@ function formGenerator(prefix, element){
     html+= '\t<input type="submit" value="{button}">\n'.supplant({
       button: "Submit"
     });
-    html+= '</form>';
+    // html+= '</form>';
 
     document.getElementById(element).innerHTML = html;
     // console.log(html);
@@ -471,6 +471,30 @@ function betweenConditionGenerate(prefix, metadata){
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.conditions)})).append(html);
     console.log(html);
+    counter++;
+  })
+}
+
+function groupGenerate(prefix, metadata){
+  $.post('wizard/columns', {
+    tables: metadata
+  }).done(function (response) {
+    html = '<div class="{class}">\n'.supplant({
+      class: ""
+    });
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[groups][group{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= columnsDropDown(response[0], 'method');
+    html+= '\t</select>\n'
+
+    html+= '</div>\n'
+    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.groups)})).append(html);
+    // console.log(html);
     counter++;
   })
 }

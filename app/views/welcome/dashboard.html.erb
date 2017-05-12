@@ -1,8 +1,12 @@
-<div id='example'></div>
+
+<%= form_tag wizard_test_path do %>
+  <div id='example'></div>
+  <div id='form_modals'>
+<% end %>
 
 <script type="text/javascript">
 
-formGenerator('query', 'example');
+formGenerator('query', 'example', 'form_modals');
 
 function includeConditionGenerate(prefix, metadata){
   html = ''
@@ -12,10 +16,7 @@ function includeConditionGenerate2(prefix, metadata){
   html = ''
   return html
 }
-function groupGenerate(prefix, metadata){
-  html = ''
-  return html
-}
+
 function havingGenerate(prefix, metadata){
   html = ''
   return html

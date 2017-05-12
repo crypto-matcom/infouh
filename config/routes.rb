@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   root to: 'welcome#dashboard'
   match 'map/new' => 'map#new', as: 'create_marker', via: :post
-  match 'wizard/test' => 'wizard#test', as: 'show_query', via: :post
-  match 'wizard/tables' => 'wizard#tables', as: 'get_tables', via: :post
-  match 'wizard/columns' => 'wizard#columns', as: 'get_columns', via: :post
-  match 'wizard/connections' => 'wizard#connections', as: 'get_connections', via: :post
+  match 'wizard/test' => 'wizard#test', as: 'wizard_test', via: :post
+  match 'wizard/tables' => 'wizard#tables', as: 'wizard_tables', via: :post
+  match 'wizard/columns' => 'wizard#columns', as: 'wizard_columns', via: :post
+  match 'wizard/connections' => 'wizard#connections', as: 'wizard_connections', via: :post
 end
