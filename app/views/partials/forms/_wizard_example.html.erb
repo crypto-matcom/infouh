@@ -1,58 +1,70 @@
-<%= form_tag show_query_path, class: 'ui form' do %>
-  <input type="text" name="prefix[tables][]" value="table1, table2, table3">
+<%= form_tag wizard_test_path do %>
+  <input type="hidden" name="prefix" value="query">
+  <input type="text" name="query[tables][]" value="table1, table2, table3">
   <!-- columna simple -->
-  <input type="select" name="prefix[columns][column1][column]" value="table1.column1">
-  <input type="hidden" name="prefix[columns][column1][type]" value="single">
+  <input type="text" name="query[columns][column1][column]" value="table1.column1">
+  <input type="hidden" name="query[columns][column1][type]" value="single">
   <!-- columna con funcion -->
-  <input type="select" name="prefix[columns][column4][column]" value="table1.column4">
-  <input type="hidden" name="prefix[columns][column4][type]" value="function">
-  <input type="select" name="prefix[columns][column4][func]" value="MAX">
+  <input type="text" name="query[columns][column4][column]" value="table1.column4">
+  <input type="hidden" name="query[columns][column4][type]" value="function">
+  <input type="text" name="query[columns][column4][func]" value="MAX">
   <!-- columna con funcion y  alias -->
-  <input type="select" name="prefix[columns][column5][column]" value="table1.column1">
-  <input type="hidden" name="prefix[columns][column5][type]" value="function">
-  <input type="select" name="prefix[columns][column5][func]" value="MIN">
-  <input type="text" name="prefix[columns][column5][alias]" value="alias">
+  <input type="text" name="query[columns][column5][column]" value="table1.column1">
+  <input type="hidden" name="query[columns][column5][type]" value="function">
+  <input type="text" name="query[columns][column5][func]" value="MIN">
+  <input type="text" name="query[columns][column5][alias]" value="alias">
 
   <!-- condicion simple -->
-  <input type="select" name="prefix[conditions][condition1][column]" value="table1.column1">
-  <input type="select" name="prefix[conditions][condition1][type]" value="equal">
-  <input type="input" name="prefix[conditions][condition1][value]" value="hola">
-  <input type="hidden" name="prefix[conditions][condition1][value_type]" value="string">
+  <input type="text" name="query[conditions][condition1][column]" value="table1.column1">
+  <input type="text" name="query[conditions][condition1][type]" value="equal">
+  <input type="text" name="query[conditions][condition1][value]" value="hola">
+  <input type="hidden" name="query[conditions][condition1][value_type]" value="string">
   <!-- condicion between -->
-  <input type="select" name="prefix[conditions][condition2][column]" value="table1.column1">
-  <input type="hidden" name="prefix[conditions][condition2][type]" value="between">
-  <input type="input" name="prefix[conditions][condition2][value][value1][value]" value="hola">
-  <input type="hidden" name="prefix[conditions][condition2][value][value1][type]" value="string">
-  <input type="input" name="prefix[conditions][condition2][value][value2][value]" value="hola">
-  <input type="hidden" name="prefix[conditions][condition2][value][value2][type]" value="string">
+  <input type="text" name="query[conditions][condition2][column]" value="table1.column1">
+  <input type="hidden" name="query[conditions][condition2][type]" value="between">
+  <input type="text" name="query[conditions][condition2][value][value1][value]" value="hola">
+  <input type="hidden" name="query[conditions][condition2][value][value1][type]" value="string">
+  <input type="text" name="query[conditions][condition2][value][value2][value]" value="hola">
+  <input type="hidden" name="query[conditions][condition2][value][value2][type]" value="string">
   <!-- condicion IN en [] -->
-  <input type="select" name="prefix[conditions][condition3][column]" value="table1.column1">
-  <input type="hidden" name="prefix[conditions][condition3][type]" value="inclusion">
-  <input type="hidden" name="prefix[conditions][condition3][value_type]" value="array">
-  <input type="input" name="prefix[conditions][condition3][value][value1][value]" value="hola">
-  <input type="hidden" name="prefix[conditions][condition3][value][value1][type]" value="string">
-  <input type="input" name="prefix[conditions][condition3][value][value2][value]" value="hola">
-  <input type="hidden" name="prefix[conditions][condition3][value][value2][type]" value="string">
+  <input type="text" name="query[conditions][condition3][column]" value="table1.column1">
+  <input type="hidden" name="query[conditions][condition3][type]" value="inclusion">
+  <input type="hidden" name="query[conditions][condition3][value_type]" value="array">
+  <input type="text" name="query[conditions][condition3][value][value1][value]" value="hola">
+  <input type="hidden" name="query[conditions][condition3][value][value1][type]" value="string">
+  <input type="text" name="query[conditions][condition3][value][value2][value]" value="hola">
+  <input type="hidden" name="query[conditions][condition3][value][value2][type]" value="string">
   <!-- condicion IN en subquery -->
-  <input type="select" name="prefix[conditions][condition4][column]" value="table1.column1">
-  <input type="hidden" name="prefix[conditions][condition4][type]" value="inclusion">
-  <input type="query" name="prefix[conditions][condition4][value]" value="{json}">
+  <input type="text" name="query[conditions][condition4][column]" value="table1.column1">
+  <input type="hidden" name="query[conditions][condition4][type]" value="inclusion">
+  <!-- <input type="query" name="query[conditions][condition4][value]" value="{json}"> -->
+
+
+  <input type="text" name="query[conditions][condition4][value][tables][]" value="table1, table2, table3">
+  <input type="text" name="query[conditions][condition4][value][columns][column1][column]" value="table1.column1">
+  <input type="hidden" name="query[conditions][condition4][value][columns][column1][type]" value="single">
+  <input type="text" name="query[conditions][condition4][value][columns][column4][column]" value="table1.column4">
+  <input type="hidden" name="query[conditions][condition4][value][columns][column4][type]" value="function">
+  <input type="text" name="query[conditions][condition4][value][columns][column4][func]" value="MAX">
+
+
+
 
   <!-- agrupamiento -->
-  <input type="select" name="prefix[groups][group1][column]" value="table1.column">
+  <input type="text" name="query[groups][group1][column]" value="table1.column">
 
   <!-- condicion de agrupamiento -->
-  <input type="select" name="prefix[having][having1][column]" value="table1.column">
-  <input type="select" name="prefix[having][having1][func]" value="MAX">
-  <input type="select" name="prefix[having][having1][type]" value="equal">
-  <input type="input" name="prefix[having][having1][value]" value="5">
-  <input type="hidden" name="prefix[having][having1][value_type]" value="int">
+  <input type="text" name="query[having][having1][column]" value="table1.column">
+  <input type="text" name="query[having][having1][func]" value="MAX">
+  <input type="text" name="query[having][having1][type]" value="equal">
+  <input type="text" name="query[having][having1][value]" value="5">
+  <input type="hidden" name="query[having][having1][value_type]" value="int">
 
   <!-- ordenacion -->
-  <input type="select" name="prefix[orders][order1][column]" value="table0.column0">
-  <input type="select" name="prefix[orders][order1][type]" value="ASC">
+  <input type="text" name="query[orders][order1][column]" value="table0.column0">
+  <input type="text" name="query[orders][order1][type]" value="ASC">
 
   <!-- limite -->
-  <input type="numeric" name="prefix[limit]" value="5">
+  <input type="numeric" name="query[limit]" value="5">
   <%= submit_tag "Send" %>
 <% end %>
