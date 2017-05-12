@@ -15,7 +15,7 @@ formControls = {
   }
 }
 
-function formGenerator(prefix, element, modals, title, perform){
+function wizardGenerator(prefix, element, modals, title, perform){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
@@ -53,7 +53,7 @@ function formGenerator(prefix, element, modals, title, perform){
     html+= '\t\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
       prefix: prefix
     });
-    html+= '\t\t\t\t\t<select class="{class}" name="{name}" onclick="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
+    html+= '\t\t\t\t\t<select class="{class}" name="{name}" onclick="wizardContentGenerator(\'{prefix}\', this)">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
       prefix: prefix,
       class: ""
@@ -88,11 +88,11 @@ function formGenerator(prefix, element, modals, title, perform){
   });
 }
 
-function formContentGenerator(prefix, element){
+function wizardContentGenerator(prefix, element){
   $.post('/wizard/tables', {
     id: element.selectedIndex.value
   }).done(function (response) {
-    html = '<select class="{class}" name="{name}" onchange="formContentDataGenerator(\'{prefix}\', this)" multiple="true">\n'.supplant({
+    html = '<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this)" multiple="true" placeholder="Select Tables">\n'.supplant({
       name: prefixStr(prefix, "[tables][]"),
       prefix: prefix,
       class: ""
@@ -112,7 +112,7 @@ function formContentGenerator(prefix, element){
   });
 }
 
-function formContentDataGenerator(prefix, element){
+function wizardContentDataGenerator(prefix, element){
   // COLUMNS
   html = '<div class="{class}">\n'.supplant({
     class: ""
@@ -222,7 +222,7 @@ function formContentDataGenerator(prefix, element){
 }
 
 
-function columnsDropDown(data){
+function optionsGenerator(data){
   html = '';
   for (table of data) {
     html+= '\t\t<option disabled="true">{name}</option>\n'.supplant({
@@ -310,7 +310,7 @@ function simpleColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n'
     html+= '\t<input type="hidden" name="{name}" value="single">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
@@ -352,7 +352,7 @@ function functionColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<input type="hidden" name="{name}" value="function">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
@@ -395,7 +395,7 @@ function aliasColumnGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t<input type="text" name="{name}" placeholder="Alias">'.supplant({
       name: '{prefix}[columns][column{counter}][alias]'.supplant({
         counter: counter,
@@ -439,7 +439,7 @@ function simpleConditionGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
@@ -490,7 +490,7 @@ function betweenConditionGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<input type="hidden" name="{name}" value="between">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
@@ -528,7 +528,7 @@ function groupGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n'
 
     html+= '</div>\n'
@@ -573,7 +573,7 @@ function havingGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[having][having{counter}][type]'.supplant({
@@ -616,7 +616,7 @@ function orderGenerate(prefix, metadata){
       }),
       class: ""
     });
-    html+= columnsDropDown(response[0], 'method');
+    html+= optionsGenerator(response[0], 'method');
     html+= '\t</select>\n'
     html+= '\t<select name="{name}" class="{class}">\n'.supplant({
       name: "{prefix}[orders][order{counter}][type]".supplant({
