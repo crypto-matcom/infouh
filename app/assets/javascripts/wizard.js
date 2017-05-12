@@ -2,52 +2,89 @@ var counter = 0;
 
 formControls = {
   tags: {
-    mainForm: 'form',
-    content: 'formcontent',
-    contentData: 'formcontentdata',
-    columns: 'formcolumns',
-    conditions: 'formconditions',
-    groups: 'formgroups',
-    having: 'formhaving',
-    orders: 'formorders',
-    limit: 'formlimit',
+    control: 'qb',
+    modal: 'modal',
+    content: 'qbcontent',
+    contentData: 'qbcontentdata',
+    columns: 'qbcolumns',
+    conditions: 'qbconditions',
+    groups: 'qbgroups',
+    having: 'qbhaving',
+    orders: 'qborders',
+    limit: 'qblimit',
   }
 }
 
-function formGenerator(prefix, element, modals){
+function formGenerator(prefix, element, modals, title, perform){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
-    html = '<form class="{class}" action="{action}" method="post" id="{id}">\n'.supplant({
-      id: prefixStr(prefix,formControls.tags.mainForm),
-      action: 'wizard/test',
-      class: 'ui form'
+    controlId = '{prefix}{tag}'.supplant({
+      tag: formControls.tags.control,
+      prefix: prefix
+    })
+    modalId = '{prefix}{tag}'.supplant({
+      tag: formControls.tags.modal,
+      prefix: prefix
+    })
+
+    control = '<div id="{id}">\n'.supplant({
+      id: controlId
     });
-    html = '\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
+    control+= '\t<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{modal_id}">\n'.supplant({
+      modal_id: modalId
+    });
+    control+= '\t\tView Query\n';
+    control+= '\t</button>\n';
+    control+= '</div>\n';
+
+    html ='\n<div class="modal fade" id="{modal_id}" tabindex="-1" role="dialog" aria-labelledby="{modal_id}Title" aria-hidden="true">\n'.supplant({
+      modal_id: modalId
+    });
+    html+='\t<div class="modal-dialog modal-lg" role="document">\n';
+    html+='\t\t<div class="modal-content">\n';
+    html+='\t\t\t<div class="modal-header">\n';
+    html+='\t\t\t\t<h5 class="modal-title" id="{modal_id}Title">{title}</h5>\n'.supplant({
+      title: title
+    });
+    html+='\t\t\t</div>\n';
+    html+='\t\t\t<div class="modal-body">\n';
+
+    html+= '\t\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
       prefix: prefix
     });
-    html+= '\t<select class="{class}" name="{name}" onclick="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
+    html+= '\t\t\t\t\t<select class="{class}" name="{name}" onclick="formContentGenerator(\'{prefix}\', this)">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
       prefix: prefix,
       class: ""
     });
     for (source of response) {
-      html+= '\t\t<option value="{value}">{name}</option>\n'.supplant({
+      html+= '\t\t\t\t\t\t<option value="{value}">{name}</option>\n'.supplant({
         value: source[0],
         name: source[1],
       });
     }
-    html+= '\t</select>\n'
-    html+= '\t<div id="{id}"></div>\n'.supplant({
+    html+= '\t\t\t\t\t</select>\n'
+    html+= '\t\t\t\t\t<div id="{id}"></div>\n'.supplant({
       id: prefixStr(prefix, formControls.tags.content)
     });
-    html+= '\t<input type="submit" value="{button}">\n'.supplant({
-      button: "Submit"
-    });
-    // html+= '</form>';
 
-    document.getElementById(element).innerHTML = html;
+    html+='\t\t\t</div>\n';
+    html+='\t\t\t<div class="modal-footer">\n';
+    html+='\t\t\t\t<button type="button" class="btn btn-secondary" data-dismiss="modal">Hide</button>\n';
+    if (perform) {
+      html+='\t\t\t\t<input type="submit" class="btn btn-secondary" value="Submit"> \n';
+    }
+    html+='\t\t\t</div>\n';
+    html+='\t\t</div>\n';
+    html+='\t</div>\n';
+    html+='</div>\n';
 
+    $('#{id}'.supplant({id: element})).append(control);
+    $('#{id}'.supplant({id: modals})).append(html);
+
+    console.log(control);
+    console.log(html);
   });
 }
 
@@ -338,14 +375,6 @@ function aliasColumnGenerate(prefix, metadata){
     html = '<div class="{class}">\n'.supplant({
       class: ""
     });
-    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
-      name: "{prefix}[columns][column{counter}][column]".supplant({
-        counter: counter,
-        prefix: prefix
-      }),
-      class: ""
-    });
-    html+= columnsDropDown(response[0], 'method');
     html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
@@ -359,6 +388,14 @@ function aliasColumnGenerate(prefix, metadata){
       });
     }
     html+= '\t</select>\n';
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[columns][column{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= columnsDropDown(response[0], 'method');
     html+= '\t<input type="text" name="{name}" placeholder="Alias">'.supplant({
       name: '{prefix}[columns][column{counter}][alias]'.supplant({
         counter: counter,
