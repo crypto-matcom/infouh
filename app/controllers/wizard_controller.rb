@@ -35,7 +35,7 @@ class WizardController < ApplicationController
   end
 
   def connections
-    @connections = Source.all.map { |e| [e.id, e.name] }
+    @connections = Source.all.map { |e| [e.name.MD5, e.name] }
 
     respond_to do |format|
       format.json { render json: @connections }

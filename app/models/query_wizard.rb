@@ -27,8 +27,8 @@ class QueryWizard
     tables.each_with_index.map { |table, index| {table: table, index: index, columns: GetColumns(connectionString, table)} }
   end
 
-  def Run connectionString, options
-    Query connectionString, QueryBuilder(connectionString, options)
+  def Run options, connectionStrings
+    Query connectionString[options["source"]], QueryBuilder(connectionString[options["source"]], options)
   end
 
   def Query connectionString, sql

@@ -47,7 +47,7 @@ function formGenerator(prefix, element, modals){
     // html+= '</form>';
 
     document.getElementById(element).innerHTML = html;
-    // console.log(html);
+
   });
 }
 
@@ -71,7 +71,7 @@ function formContentGenerator(prefix, element){
     });
 
     document.getElementById(prefixStr(prefix, formControls.tags.content)).innerHTML = html;
-    // console.log(html);
+
   });
 }
 
@@ -181,7 +181,7 @@ function formContentDataGenerator(prefix, element){
   });
 
   document.getElementById(prefixStr(prefix, formControls.tags.contentData)).innerHTML = html
-  // console.log(html);
+
 }
 
 
@@ -284,7 +284,7 @@ function simpleColumnGenerate(prefix, metadata){
 
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
-    // console.log(html);
+
     counter++;
   })
 }
@@ -296,15 +296,6 @@ function functionColumnGenerate(prefix, metadata){
     html = '<div class="{class}">\n'.supplant({
       class: ""
     });
-    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
-      name: "{prefix}[columns][column{counter}][column]".supplant({
-        counter: counter,
-        prefix: prefix
-      }),
-      class: ""
-    });
-    html+= columnsDropDown(response[0], 'method');
-    html+= '\t</select>\n';
     html+= '\t<select name="{name}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
         counter: counter,
@@ -317,6 +308,15 @@ function functionColumnGenerate(prefix, metadata){
       });
     }
     html+= '\t</select>\n';
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[columns][column{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= columnsDropDown(response[0], 'method');
+    html+= '\t</select>\n';
     html+= '\t<input type="hidden" name="{name}" value="function">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
         counter: counter,
@@ -326,7 +326,7 @@ function functionColumnGenerate(prefix, metadata){
 
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
-    // console.log(html);
+
     counter++;
   })
 }
@@ -374,7 +374,7 @@ function aliasColumnGenerate(prefix, metadata){
 
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.columns)})).append(html);
-    // console.log(html);
+
     counter++;
   })
 }
@@ -425,7 +425,7 @@ function simpleConditionGenerate(prefix, metadata){
     });
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.conditions)})).append(html);
-    // console.log(html);
+
     counter++;
   })
 }
@@ -475,6 +475,8 @@ function betweenConditionGenerate(prefix, metadata){
   })
 }
 
+
+
 function groupGenerate(prefix, metadata){
   $.post('wizard/columns', {
     tables: metadata
@@ -494,7 +496,116 @@ function groupGenerate(prefix, metadata){
 
     html+= '</div>\n'
     $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.groups)})).append(html);
-    // console.log(html);
+
     counter++;
   })
+}
+
+function havingGenerate(prefix, metadata){
+  $.post('wizard/columns', {
+    tables: metadata
+  }).done(function (response) {
+    html = '<div class="{class}">\n'.supplant({
+      class: ""
+    });
+    html+= '\t<select name="{name}">\n'.supplant({
+      name: '{prefix}[having][having{counter}][func]'.supplant({
+        counter: counter,
+        prefix: prefix
+      })
+    });
+    for (func of response[2]) {
+      html+= '\t\t<option value="{func}">{func}</option>'.supplant({
+        func: func
+      });
+    }
+    html+= '\t</select>\n';
+    html+= '\t<select name="{name}" class="{class}" onchange="insertInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
+      name: "{prefix}[having][having{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      prefix: "{prefix}[having][having{counter}]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      id: "{prefix}{counter}{name}".supplant({
+        name: formControls.tags.having,
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= columnsDropDown(response[0], 'method');
+    html+= '\t</select>\n';
+    html+= '\t<select name="{name}">\n'.supplant({
+      name: '{prefix}[having][having{counter}][type]'.supplant({
+        counter: counter,
+        prefix: prefix
+      })
+    });
+    for (operator of response[1]) {
+      html+= '\t\t<option value="{operator}">{operator}</option>'.supplant({
+        operator: operator
+      });
+    }
+    html+= '\t</select>\n';
+    html+= '\n<div id="{id}"></div>'.supplant({
+      id: "{prefix}{counter}{name}".supplant({
+        name: formControls.tags.having,
+        counter: counter,
+        prefix: prefix
+      })
+    });
+    html+= '</div>\n'
+    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.having)})).append(html);
+    console.log(html);
+    counter++;
+  })
+}
+
+function orderGenerate(prefix, metadata){
+  $.post('wizard/columns', {
+    tables: metadata
+  }).done(function (response) {
+    html = '<div class="{class}">\n'.supplant({
+      class: ""
+    });
+
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[orders][order{counter}][column]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= columnsDropDown(response[0], 'method');
+    html+= '\t</select>\n'
+    html+= '\t<select name="{name}" class="{class}">\n'.supplant({
+      name: "{prefix}[orders][order{counter}][type]".supplant({
+        counter: counter,
+        prefix: prefix
+      }),
+      class: ""
+    });
+    html+= '\t\t<option value="ASC" selected="true">Ascending</option>\n';
+    html+= '\t\t<option value="DESC">Descending</option>\n';
+    html+= '\t</select>\n';
+
+    html+= '</div>\n'
+    $('#{id}'.supplant({id: prefixStr(prefix, formControls.tags.orders)})).append(html);
+    console.log(html);
+    counter++;
+  })
+}
+
+function limitGenerate(prefix, metadata){
+  html = '<div class="{class}">\n'.supplant({
+    class: ""
+  });
+  html+= '<input type="text" name="{name}">'.supplant({
+    name: prefixStr(prefix, '[limit]')
+  });
+  html+= '</div>\n'
+  document.getElementById(prefixStr(prefix, formControls.tags.limit)).innerHTML = html;
 }
