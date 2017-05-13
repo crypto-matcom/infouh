@@ -1,0 +1,13 @@
+<%= javascript_include_tag 'flat/responsiveslides' %>
+
+<script>
+   $(function () {
+     $("#slider").responsiveSlides({
+       auto: true,
+       nav: true,
+       speed: 500,
+       namespace: "callbacks",
+       pager: true,
+     });
+   });
+</script>
