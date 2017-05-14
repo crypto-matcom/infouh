@@ -100,7 +100,6 @@ function wizardGenerator(prefix, element, modal, title, perform){
     html+='\t\t</div>\n';
     html+='\t</div>\n';
     html+='</div>\n';
-    console.log(html);
 
     $('#{id}'.supplant({id: element})).append(control);
     $('#{id}'.supplant({id: modal})).append(html);
@@ -328,7 +327,7 @@ function insertBetweenInput(element, id, name){
 
 
 function simpleColumnGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -366,7 +365,7 @@ function simpleColumnGenerate(prefix, metadata){
 }
 
 function functionColumnGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -422,7 +421,7 @@ function functionColumnGenerate(prefix, metadata){
 }
 
 function aliasColumnGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -486,7 +485,7 @@ function aliasColumnGenerate(prefix, metadata){
 }
 
 function simpleConditionGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -537,7 +536,7 @@ function simpleConditionGenerate(prefix, metadata){
 }
 
 function betweenConditionGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -576,13 +575,12 @@ function betweenConditionGenerate(prefix, metadata){
     });
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
-    console.log(html);
     counter++;
   })
 }
 
 function includeConditionGenerate2(prefix, metadata, modal){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -627,7 +625,7 @@ function includeConditionGenerate2(prefix, metadata, modal){
 }
 
 function groupGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -651,7 +649,7 @@ function groupGenerate(prefix, metadata){
 }
 
 function havingGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -708,13 +706,12 @@ function havingGenerate(prefix, metadata){
     });
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.having)})).append(html);
-    console.log(html);
     counter++;
   })
 }
 
 function orderGenerate(prefix, metadata){
-  $.post('wizard/columns', {
+  $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
     html = '\t<div class="{class}">\n'.supplant({
@@ -743,7 +740,6 @@ function orderGenerate(prefix, metadata){
 
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.orders)})).append(html);
-    console.log(html);
     counter++;
   })
 }
