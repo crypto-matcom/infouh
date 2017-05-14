@@ -20,6 +20,9 @@ function wizardGenerator(prefix, element, modal, title, perform){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
+    select_id = "select{prefix}sources".supplant({
+      prefix: sanitize(prefix)
+    })
     controlId = '{prefix}{tag}'.supplant({
       tag: formControls.tags.control,
       prefix: sanitize(prefix)
@@ -52,9 +55,6 @@ function wizardGenerator(prefix, element, modal, title, perform){
     });
     html+='\t\t\t\t\t</div>\n'
     html+='\t\t\t\t\t<div class="four wide field">\n'
-    select_id = "select{prefix}1".supplant({
-      prefix: sanitize(prefix)
-    })
     html+= '\t\t\t\t\t\t<select class="{class}" name="{name}" onchange="wizardContentGenerator(\'{prefix}\', this, \'{modal}\')" id="{id}">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
       prefix: prefix,
@@ -113,7 +113,7 @@ function wizardContentGenerator(prefix, element, modal){
     id: element.selectedIndex.value,
     data: false
   }).done(function (response) {
-    select_id = "select{prefix}2".supplant({
+    select_id = "select{prefix}tables".supplant({
       prefix: sanitize(prefix)
     })
     html = '\t<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\')" multiple="true" id="{id}">\n'.supplant({
@@ -123,14 +123,14 @@ function wizardContentGenerator(prefix, element, modal){
       class: "ui dropdown",
       id: select_id
     });
-    html+= '\t\t\t\t\t\t\t<option value="">Tables</option>'
+    html+= '\t\t\t\t\t\t\t<option value="">Tables</option>\n'
     for (table of response) {
       html+= '\t\t<option value="{value}">{value}</option>\n'.supplant({
         value: table,
       });
     }
     html+= '\t</select>\n';
-    html2= '\t<div id="{id}"></div>'.supplant({
+    html2= '\t<div id="{id}"></div>\n'.supplant({
       id: prefixStr(sanitize(prefix), formControls.tags.contentData)
     });
 
@@ -147,18 +147,18 @@ function wizardContentDataGenerator(prefix, element, modal){
   });
   html+= '\t\t<div onclick="simpleColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
   html+= '\t\t<div onclick="functionColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
   html+= '\t\t<div onclick="aliasColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>'
+    name: '<i class="align left icon"></i>\n'
   });
   html+= '\t</div>\n';
   html+= '\t<div id="{id}"></div>\n'.supplant({
@@ -170,22 +170,22 @@ function wizardContentDataGenerator(prefix, element, modal){
   });
   html+= '\t\t<div onclick="simpleConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
   html+= '\t\t<div onclick="betweenConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
   html+= '\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
   });
   html+= '\t\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>',
+    name: '<i class="align left icon"></i>\n',
     prefix: prefix,
     modal: modal
   });
@@ -200,7 +200,7 @@ function wizardContentDataGenerator(prefix, element, modal){
   html+= '\t\t<div onclick="groupGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>'
+    name: '<i class="align left icon"></i>\n'
   });
   html+= '\t</div>\n';
   html+= '\t<div id="{id}"></div>\n'.supplant({
@@ -213,7 +213,7 @@ function wizardContentDataGenerator(prefix, element, modal){
   html+= '\t\t<div onclick="havingGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>'
+    name: '<i class="align left icon"></i>\n'
   });
   html+= '\t</div>\n';
   html+= '\t<div id="{id}"></div>\n'.supplant({
@@ -226,7 +226,7 @@ function wizardContentDataGenerator(prefix, element, modal){
   html+= '\t\t<div onclick="orderGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>'
+    name: '<i class="align left icon"></i>\n'
   });
   html+= '\t</div>\n';
   html+= '\t<div id="{id}"></div>\n'.supplant({
@@ -239,7 +239,7 @@ function wizardContentDataGenerator(prefix, element, modal){
   html+= '\t\t<div onclick="limitGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>'
+    name: '<i class="align left icon"></i>\n'
   });
   html+= '\t</div>\n';
   html+= '\t<div id="{id}"></div>\n'.supplant({
@@ -253,7 +253,7 @@ function wizardContentDataGenerator(prefix, element, modal){
 
 function optionsGenerator(data){
   html = '\t';
-  html+= '<option value="">Column</option>'
+  html+= '<option value="">Column</option>\n'
   for (table of data) {
     html+= '\t\t\t<option disabled="true">{name}</option>\n'.supplant({
       name: table[0]
@@ -271,7 +271,7 @@ function optionsGenerator(data){
 
 function insertInput(element, id, name){
   function inputString(name) {
-    return '\t<input type="text" name="{name}[value]" placeholder="Value">'.supplant({
+    return '\t<input type="text" name="{name}[value]" placeholder="Value">\n'.supplant({
       name: name
     })
   }
@@ -296,18 +296,22 @@ function insertInput(element, id, name){
 
 function insertBetweenInput(element, id, name){
   function inputString(name, counter) {
-    return '\t<input type="text" name="{name}[value{counter}][value]" placeholder="Value">'.supplant({
+    input = '\t<div class="field">\n';
+    input+= '\t\t<input type="text" name="{name}[value{counter}][value]" placeholder="Value">\n'.supplant({
       counter: counter,
       name: name
-    })
+    });
+    input+= '\t</div>\n';
+    return input;
   }
 
   dataType = 'string';
-  html = "";
+  html = '';
 
   switch (dataType) {
     case "string":
       html+= inputString(name, 1);
+      html+= '\t\t<label class="">AND</label>\n';
       html+= inputString(name, 2);
       break;
     default:
@@ -330,15 +334,16 @@ function simpleColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
+    select_id = 'select{prefix}{counter}'.supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    })
     html = '\t<div class="{class}">\n'.supplant({
       class: "fields"
     });
     html = '\t\t<div class="{class}">\n'.supplant({
       class: "five wide field"
     });
-    select_id = 'select{prefix}3'.supplant({
-      prefix: sanitize(prefix)
-    })
     html+= '\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: "{prefix}[columns][column{counter}][column]".supplant({
         counter: counter,
@@ -368,33 +373,35 @@ function functionColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: "equal width fields"
-    });
-    select_id = "select{prefix}4".supplant({
-      prefix: sanitize(prefix)
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     })
-    html+= '<div class="field">'
-    html+= '\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
+    select_id2 = "select{counter}{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    })
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="two wide field">\n'
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: "ui dropdown",
+      class: "ui fluid search dropdown",
       id: select_id
     });
     for (func of response[2]) {
-      html+= '\t\t\t<option value="{func}">{func}</option>'.supplant({
+      html+= '\t\t\t\t<option value="{func}">{func}</option>\n'.supplant({
         func: func
       });
     }
-    html+= '\t\t</select>\n';
-    html+= '</div>'
-    select_id2 = "select{prefix}5".supplant({
-      prefix: sanitize(prefix)
-    })
-    html+= '<div class="field">'
-    html+= '\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n'
+    html+= '\t\t<div class="five wide field">\n'
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: "{prefix}[columns][column{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
@@ -403,8 +410,8 @@ function functionColumnGenerate(prefix, metadata){
       id: select_id2
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n';
-    html+= '</div>'
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n'
     html+= '\t\t<input type="hidden" name="{name}" value="function">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
         counter: counter,
@@ -424,33 +431,35 @@ function aliasColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: "equal width fields"
-    });
-    select_id = "select{prefix}6".supplant({
-      prefix: sanitize(prefix)
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     })
-    html+='<div class="field">'
-    html+= '\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
+    select_id2 = "select{counter}{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    })
+    html ='\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+='\t\t<div class="two wide field">\n'
+    html+='\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: '{prefix}[columns][column{counter}][func]'.supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: "ui dropdown",
+      class: "ui fluid search dropdown",
       id: select_id
     });
     for (func of response[2]) {
-      html+= '\t\t\t<option value="{func}">{func}</option>'.supplant({
+      html+='\t\t\t\t<option value="{func}">{func}</option>\n'.supplant({
         func: func
       });
     }
-    html+= '\t\t</select>\n';
-    html+= '</div>'
-    html+= '<div class="field">'
-    select_id2 = "select{prefix}7".supplant({
-      prefix: sanitize(prefix)
-    })
-    html+= '\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
+    html+='\t\t\t</select>\n';
+    html+='\t\t</div>\n'
+    html+='\t\t<div class="five wide field">\n'
+    html+='\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: "{prefix}[columns][column{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
@@ -458,25 +467,25 @@ function aliasColumnGenerate(prefix, metadata){
       class: "ui dropdown",
       id: select_id2
     });
-    html+= optionsGenerator(response[0], 'method');
-    html+= '</select>\n'
-    html+= '</div>'
-    html+= '<div class="field">\n';
-    html+= '\t\t<input type="text" name="{name}" placeholder="Alias">'.supplant({
+    html+=optionsGenerator(response[0], 'method');
+    html+='\t\t\t</select>\n'
+    html+='\t\t</div>\n'
+    html+='\t\t<div class="five wide field">\n';
+    html+='\t\t\t<input type="text" name="{name}" placeholder="Alias">\n'.supplant({
       name: '{prefix}[columns][column{counter}][alias]'.supplant({
         counter: counter,
         prefix: prefix
       })
     })
-    html+= '</div>\n'
-    html+= '\t\t<input type="hidden" name="{name}" value="function">\n'.supplant({
+    html+='\t\t</div>\n'
+    html+='\t\t<input type="hidden" name="{name}" value="function">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
         counter: counter,
         prefix: prefix
       })
     });
+    html+='\t</div>\n'
 
-    html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.columns)})).append(html);
     $('#{id}'.supplant({id: select_id})).dropdown();
     $('#{id}'.supplant({id: select_id2})).dropdown();
@@ -488,10 +497,15 @@ function simpleConditionGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-    html+= '\t\t<select name="{name}" class="{class}" onchange="insertInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="five wide field">\n';
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}" onchange="insertInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
       name: "{prefix}[conditions][condition{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
@@ -505,23 +519,27 @@ function simpleConditionGenerate(prefix, metadata){
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      sid: select_id
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n';
-    html+= '\t\t<select name="{name}">\n'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div class="two wide field">\n';
+    html+= '\t\t\t<select name="{name}">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
         counter: counter,
         prefix: prefix
       })
     });
     for (operator of response[1]) {
-      html+= '\t\t\t<option value="{operator}">{operator}</option>'.supplant({
+      html+= '\t\t\t\t<option value="{operator}">{operator}</option>\n'.supplant({
         operator: operator
       });
     }
-    html+= '\t\t</select>\n';
-    html+= '\t\n<div id="{id}"></div>'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div id="{id}"></div>\n'.supplant({
       id: "{name}{counter}".supplant({
         name: formControls.tags.conditions,
         counter: counter,
@@ -530,7 +548,7 @@ function simpleConditionGenerate(prefix, metadata){
     });
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
-
+    $('#{id}'.supplant({id:select_id})).dropdown();
     counter++;
   })
 }
@@ -539,10 +557,15 @@ function betweenConditionGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-    html+= '\t\t<select name="{name}" class="{class}" onchange="insertBetweenInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "inline fields"
+    });
+    html+= '\t\t<div class="five wide field">\n'
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}" onchange="insertBetweenInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
       name: "{prefix}[conditions][condition{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
@@ -556,25 +579,30 @@ function betweenConditionGenerate(prefix, metadata){
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      sid: select_id
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n';
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<label>BETWEEN</label>\n';
     html+= '\t\t<input type="hidden" name="{name}" value="between">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
         counter: counter,
         prefix: prefix
       })
     });
-    html+= '\t\n<div id="{id}"></div>'.supplant({
+    html+= '\t\t<div id="{id}" class="{class}"></div>\n'.supplant({
       id: "{name}{counter}".supplant({
         name: formControls.tags.conditions,
         counter: counter,
         prefix: prefix
-      })
+      }),
+      class: "inline fields loc-btn-0"
     });
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
+    $('#{id}'.supplant({id:select_id})).dropdown();
     counter++;
   })
 }
@@ -583,18 +611,25 @@ function includeConditionGenerate2(prefix, metadata, modal){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-    html+= '\t\t<select name="{name}" class="{class}">\n'.supplant({
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="five wide field">\n';
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}">\n'.supplant({
       name: "{prefix}[conditions][condition{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      sid: select_id
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n'
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
     html+= '\t\t<input type="hidden" name="{name}" value="inclusion">\n'.supplant({
       name: '{prefix}[conditions][condition{counter}][type]'.supplant({
         counter: counter,
@@ -607,10 +642,12 @@ function includeConditionGenerate2(prefix, metadata, modal){
         prefix: prefix
       })
     });
-    html+= '\t\t<div id="{id}"></div>'.supplant({
+    html+= '\t\t<div class="field">\n';
+    html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
       id: prefixStr('nestedQuery', counter)
     });
-    html+= '\t</div>\n'
+    html+= '\t\t</div>\n';
+    html+= '\t</div>\n';
 
     next_prefix = '{prefix}[conditions][condition{counter}][value]'.supplant({
       counter: counter,
@@ -619,6 +656,7 @@ function includeConditionGenerate2(prefix, metadata, modal){
 
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
     wizardGenerator(next_prefix, prefixStr('nestedQuery', counter), modal, 'Nested Query', false);
+    $('#{id}'.supplant({id:select_id})).dropdown();
 
     counter++;
   })
@@ -628,21 +666,29 @@ function groupGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-    html+= '\t\t<select name="{name}" class="{class}">\n'.supplant({
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="five wide field">\n'
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
       name: "{prefix}[groups][group{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      id: select_id
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n'
-
+    html+= '\t\t\t</select>\n'
+    html+= '\t\t</div>\n'
     html+= '\t</div>\n'
+
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.groups)})).append(html);
+    $('#{id}'.supplant({id:select_id})).dropdown();
 
     counter++;
   })
@@ -652,22 +698,39 @@ function havingGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-    html+= '\t\t<select name="{name}">\n'.supplant({
+    select_id2 = "select{counter}{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    });
+    select_id3 = "s{counter}select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    });
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="two wide field">\n';
+    html+= '\t\t\t<select name="{name}" id="{sid}" class="{class}">\n'.supplant({
       name: '{prefix}[having][having{counter}][func]'.supplant({
         counter: counter,
         prefix: prefix
-      })
+      }),
+      class: "ui fluid search dropdown",
+      sid: select_id
     });
     for (func of response[2]) {
-      html+= '\t\t\t<option value="{func}">{func}</option>'.supplant({
+      html+= '\t\t\t\t<option value="{func}">{func}</option>\n'.supplant({
         func: func
       });
     }
-    html+= '\t\t</select>\n';
-    html+= '\t\t<select name="{name}" class="{class}" onchange="insertInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div class="five wide field">\n';
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}" onchange="insertInput(this, \'{id}\', \'{prefix}\')">\n'.supplant({
       name: "{prefix}[having][having{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
@@ -681,23 +744,29 @@ function havingGenerate(prefix, metadata){
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui fluid search dropdown",
+      sid: select_id2
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n';
-    html+= '\t\t<select name="{name}">\n'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div class="two wide field">\n';
+    html+= '\t\t\t<select name="{name}" id="{sid}" class="{class}">\n'.supplant({
       name: '{prefix}[having][having{counter}][type]'.supplant({
         counter: counter,
         prefix: prefix
-      })
+      }),
+      class: "ui fluid search dropdown",
+      sid: select_id3
     });
     for (operator of response[1]) {
-      html+= '\t\t\t<option value="{operator}">{operator}</option>'.supplant({
+      html+= '\t\t\t\t<option value="{operator}">{operator}</option>\n'.supplant({
         operator: operator
       });
     }
-    html+= '\t\t</select>\n';
-    html+= '\t\n<div id="{id}"></div>'.supplant({
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div id="{id}"></div>\n'.supplant({
       id: "{name}{counter}".supplant({
         name: formControls.tags.having,
         counter: counter,
@@ -706,6 +775,9 @@ function havingGenerate(prefix, metadata){
     });
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.having)})).append(html);
+    $('#{id}'.supplant({id:select_id3})).dropdown();
+    $('#{id}'.supplant({id:select_id2})).dropdown();
+    $('#{id}'.supplant({id:select_id})).dropdown();
     counter++;
   })
 }
@@ -714,43 +786,61 @@ function orderGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
   }).done(function (response) {
-    html = '\t<div class="{class}">\n'.supplant({
-      class: ""
+    select_id = "select{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
     });
-
-    html+= '\t\t<select name="{name}" class="{class}">\n'.supplant({
+    select_id2 = "select{counter}{prefix}{counter}".supplant({
+      prefix: sanitize(prefix),
+      counter: counter
+    });
+    html = '\t<div class="{class}">\n'.supplant({
+      class: "fields"
+    });
+    html+= '\t\t<div class="five wide field">\n';
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}">\n'.supplant({
       name: "{prefix}[orders][order{counter}][column]".supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      sid: select_id
     });
     html+= optionsGenerator(response[0], 'method');
-    html+= '\t\t</select>\n'
-    html+= '\t\t<select name="{name}" class="{class}">\n'.supplant({
+    html+= '\t\t\t</select>\n'
+    html+= '\t\t</div>\n';
+    html+= '\t\t<div class="four wide field">\n';
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{sid}">\n'.supplant({
       name: "{prefix}[orders][order{counter}][type]".supplant({
         counter: counter,
         prefix: prefix
       }),
-      class: ""
+      class: "ui dropdown",
+      sid: select_id2
     });
-    html+= '\t\t\t<option value="ASC" selected="true">Ascending</option>\n';
-    html+= '\t\t\t<option value="DESC">Descending</option>\n';
-    html+= '\t\t</select>\n';
+    html+= '\t\t\t\t<option value="ASC" selected="true">Ascending</option>\n';
+    html+= '\t\t\t\t<option value="DESC">Descending</option>\n';
+    html+= '\t\t\t</select>\n';
+    html+= '\t\t</div>\n';
+    html+= '\t</div>\n';
 
-    html+= '\t</div>\n'
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.orders)})).append(html);
+    $('#{id}'.supplant({id:select_id2})).dropdown();
+    $('#{id}'.supplant({id:select_id})).dropdown();
+
     counter++;
   })
 }
 
 function limitGenerate(prefix, metadata){
   html = '\t<div class="{class}">\n'.supplant({
-    class: ""
+    class: "fields"
   });
-  html+= '\t<input type="text" name="{name}">'.supplant({
+  html+= '\t\t<div class="three wide field">\n';
+  html+= '\t\t\t<input type="text" name="{name}">\n'.supplant({
     name: prefixStr(prefix, '[limit]')
   });
-  html+= '\t</div>\n'
+  html+= '\t\t</div>\n';
+  html+= '\t</div>\n';
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.limit)).innerHTML = html;
 }

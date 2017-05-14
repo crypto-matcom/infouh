@@ -172,13 +172,13 @@ class QueryWizard
   public
     def SingleOperators
       return {
-        "Equal" => "=",
-        "Lower" => "<",
-        "Greater" => ">",
-        "Like" => "LIKE",
-        "Distinct" => "<>",
-        "LowerEqual" => "<=",
-        "GreaterEqual" => ">=" ,
+        "=" => "=",
+        "<" => "<",
+        ">" => ">",
+        "<=" => "<=",
+        ">=" => ">=",
+        "<>" => "<>",
+        "LIKE" => "LIKE",
       }
     end
 

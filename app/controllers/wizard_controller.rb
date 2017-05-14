@@ -18,7 +18,7 @@ class WizardController < ApplicationController
   end
 
   def columns
-    source = @queryWizard.ConnectionString(Source.all.first.connectionInfo)
+    source = @queryWizard.ConnectionString Source.all.first.connectionInfo
 
     @columns = [
       @queryWizard.GetTablesColumns(source, ['metadata', 'map']).map { |e| [e[:table], e[:columns].map { |f| [f.name, f.type] }] },
@@ -44,7 +44,8 @@ class WizardController < ApplicationController
   end
 
   def test
-    puts @queryWizard.ConformQuery Source.all.first().connectionInfo, params[params[:prefix]]
+    source = @queryWizard.ConnectionString Source.all.first().connectionInfo
+    puts @queryWizard.ConformQuery source, params[params[:prefix]]
   end
 
 end
