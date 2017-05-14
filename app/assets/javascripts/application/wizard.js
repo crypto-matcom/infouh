@@ -47,20 +47,21 @@ function wizardGenerator(prefix, element, modal, title, perform){
     });
     html+='\t<div class="modal-dialog modal-lg" role="document">\n';
     html+='\t\t<div class="modal-content">\n';
-    html+='\t\t\t<div class="modal-header">\n';
+    html+='\t\t\t<div class="modal-body">\n';
     html+='\t\t\t\t<div class="fields">\n'
     html+='\t\t\t\t\t<div class="two wide field">\n'
     html+='\t\t\t\t\t\t<label id="{modal_id}Title">{title}</label>\n'.supplant({
       title: title
     });
     html+='\t\t\t\t\t</div>\n'
-    html+='\t\t\t\t\t<div class="four wide field">\n'
-    html+= '\t\t\t\t\t\t<select class="{class}" name="{name}" onchange="wizardContentGenerator(\'{prefix}\', this, \'{modal}\')" id="{id}">\n'.supplant({
+    html+='\t\t\t\t\t<div class="three wide field">\n'
+    html+= '\t\t\t\t\t\t<select class="{class}" name="{name}" onchange="wizardContentGenerator(\'{prefix}\', this, \'{modal}\',{perform})" id="{id}">\n'.supplant({
       name: prefixStr(prefix, "[source]"),
+      class: "ui fluid search dropdown",
+      perform: perform.toString(),
       prefix: prefix,
-      modal: modal,
-      class: "ui dropdown",
-      id: select_id
+      id: select_id,
+      modal: modal
     });
     html+= '\t\t\t\t\t\t\t<option value="">Source</option>\n'
     for (source of response) {
@@ -71,36 +72,32 @@ function wizardGenerator(prefix, element, modal, title, perform){
     }
     html+='\t\t\t\t\t\t</select>\n'
     html+='\t\t\t\t\t</div>\n'
-    html+='\t\t\t\t\t<div class="ten wide field" id="{id}"></div>\n'.supplant({
+    html+='\t\t\t\t\t<div class="nine wide field" id="{id}"></div>\n'.supplant({
       id: "{prefix}{sufix}".supplant({
         sufix: formControls.tags.tables,
         prefix: sanitize(prefix)
       })
     });
+    html+='\t\t\t\t\t<div class="three wide field" id="{id}"></div>\n'.supplant({
+      id: prefixStr(sanitize(prefix), formControls.tags.limit)
+    });
     html+='\t\t\t\t</div>\n';
-    html+='\t\t\t\t<div class="modal-body">\n';
-    if(perform){
-      html+='\t\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
+    if(perform){ html+='\t\t\t\t<input type="hidden" name="prefix" value="{prefix}">\n'.supplant({
         prefix: prefix
-      });
-    }
-
-    html+='\t\t\t\t\t<div id="{id}"></div>\n'.supplant({
+      }); }
+    html+='\t\t\t\t<div id="{id}"></div>\n'.supplant({
       id: prefixStr(sanitize(prefix), formControls.tags.content)
     });
-
-    html+='\t\t\t\t</div>\n';
-    html+='\t\t\t\t<div class="modal-footer">\n';
-    html+='\t\t\t\t\t<button type="button" class="btn btn-secondary" data-dismiss="modal">Hide</button>\n';
-    if (perform) {
-      html+='\t\t\t\t\t<input type="submit" class="btn btn-secondary" value="Submit"> \n';
+    html+='\t\t\t</div>\n';
+    html+='\t\t\t<div class="modal-footer">\n';
+    html+='\t\t\t\t<button type="button" class="btn btn-secondary" data-dismiss="modal">Hide</button>\n';
+    if(perform){
+      html+='\t\t\t\t<input type="submit" class="btn btn-secondary">\n';
     }
-    html+='\t\t\t\t</div>\n';
     html+='\t\t\t</div>\n';
     html+='\t\t</div>\n';
     html+='\t</div>\n';
     html+='</div>\n';
-
     $('#{id}'.supplant({id: element})).append(control);
     $('#{id}'.supplant({id: modal})).append(html);
     $('#{id}'.supplant({id:select_id})).dropdown();
@@ -108,7 +105,7 @@ function wizardGenerator(prefix, element, modal, title, perform){
   });
 }
 
-function wizardContentGenerator(prefix, element, modal){
+function wizardContentGenerator(prefix, element, modal, perform){
   $.post('/wizard/tables', {
     id: element.selectedIndex.value,
     data: false
@@ -116,14 +113,15 @@ function wizardContentGenerator(prefix, element, modal){
     select_id = "select{prefix}tables".supplant({
       prefix: sanitize(prefix)
     })
-    html = '\t<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\')" multiple="true" id="{id}">\n'.supplant({
+    html = '\t<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\', {perform})" multiple="true" id="{id}">\n'.supplant({
       name: prefixStr(prefix, "[tables][]"),
+      class: "ui dropdown",
+      perform: perform.toString(),
       prefix: prefix,
       modal: modal,
-      class: "ui dropdown",
       id: select_id
     });
-    html+= '\t\t\t\t\t\t\t<option value="">Tables</option>\n'
+    html+= '\t\t<option value="">Tables</option>\n'
     for (table of response) {
       html+= '\t\t<option value="{value}">{value}</option>\n'.supplant({
         value: table,
@@ -140,115 +138,138 @@ function wizardContentGenerator(prefix, element, modal){
   });
 }
 
-function wizardContentDataGenerator(prefix, element, modal){
+function wizardContentDataGenerator(prefix, element, modal, perform){
+  html = '';
+
+  html+='\t<div class="tabs tabs-style-linebox">\n';
+  html+='\t\t<nav>\n';
+  html+='\t\t\t<ul>\n';
+  html+='\t\t\t\t<li><a href="#section-linebox-1"><span>Columns</span></a></li>\n';
+  html+='\t\t\t\t<li><a href="#section-linebox-2"><span>Conditions</span></a></li>\n';
+  html+='\t\t\t\t<li><a href="#section-linebox-3"><span>Groups</span></a></li>\n';
+  html+='\t\t\t\t<li><a href="#section-linebox-4"><span>Having</span></a></li>\n';
+  html+='\t\t\t\t<li><a href="#section-linebox-5"><span>Orders</span></a></li>\n';
+  html+='\t\t\t</ul>\n';
+  html+='\t\t</nav>\n';
+  html+='\t<div class="content-wrap">\n';
+
   // COLUMNS
-  html = '\t<div class="{class}">\n'.supplant({
+  html+= '\t\t<section id="section-linebox-1">\n';
+  html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic icon buttons"
   });
-  html+= '\t\t<div onclick="simpleColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="simpleColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
-  html+= '\t\t<div onclick="functionColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="functionColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
-  html+= '\t\t<div onclick="aliasColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="aliasColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
     name: '<i class="align left icon"></i>\n'
   });
-  html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
+  html+= '\t\t\t</div>\n';
+  html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.columns)
   });
+  html+= '\t\t</section>\n';
   // CONDITIONS
-  html+= '\t<div class="{class}">\n'.supplant({
+
+  html+= '\t\t<section id="section-linebox-2">\n';
+  html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic icon buttons"
   });
-  html+= '\t\t<div onclick="simpleConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="simpleConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
-  html+= '\t\t<div onclick="betweenConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="betweenConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: '<i class="align left icon"></i>\n',
     prefix: prefix
   });
-  html+= '\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
     name: '<i class="align left icon"></i>\n',
   });
-  html+= '\t\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: '<i class="align left icon"></i>\n',
     prefix: prefix,
     modal: modal
   });
-  html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
+  html+= '\t\t\t</div>\n';
+  html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.conditions)
   });
+  html+= '\t\t</section>\n';
+
   // GROUPS
-  html+= '\t<div class="{class}">\n'.supplant({
+
+  html+= '\t\t<section id="section-linebox-3">\n';
+  html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic icon buttons"
   });
-  html+= '\t\t<div onclick="groupGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="groupGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
     name: '<i class="align left icon"></i>\n'
   });
-  html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
+  html+= '\t\t\t</div>\n';
+  html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.groups)
   });
+  html+= '\t\t</section>\n';
+
   // HAVING
-  html+= '\t<div class="{class}">\n'.supplant({
+
+  html+= '\t\t<section id="section-linebox-4">\n';
+  html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic icon buttons"
   });
-  html+= '\t\t<div onclick="havingGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="havingGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
     name: '<i class="align left icon"></i>\n'
   });
-  html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
+  html+= '\t\t\t</div>\n';
+  html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.having)
   });
+  html+= '\t\t</section>\n';
+
   // ORDERS
-  html+= '\t<div class="{class}">\n'.supplant({
+
+  html+= '\t\t<section id="section-linebox-5">\n';
+  html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic icon buttons"
   });
-  html+= '\t\t<div onclick="orderGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  html+= '\t\t\t\t<div onclick="orderGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
     name: '<i class="align left icon"></i>\n'
   });
-  html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
+  html+= '\t\t\t</div>\n';
+  html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.orders)
   });
-  // LIMIT
-  html+= '\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
-  });
-  html+= '\t\t<div onclick="limitGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
-    metadata: selectedOptions(element),
-    prefix: prefix,
-    name: '<i class="align left icon"></i>\n'
-  });
+  html+= '\t\t</section>\n';
   html+= '\t</div>\n';
-  html+= '\t<div id="{id}"></div>\n'.supplant({
-    id: prefixStr(sanitize(prefix), formControls.tags.limit)
-  });
+
 
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.contentData)).innerHTML = html
+  limitGenerate(prefix, selectedOptions(element));
+  tabSetter();
 
 }
+
 
 
 function optionsGenerator(data){
@@ -833,14 +854,8 @@ function orderGenerate(prefix, metadata){
 }
 
 function limitGenerate(prefix, metadata){
-  html = '\t<div class="{class}">\n'.supplant({
-    class: "fields"
-  });
-  html+= '\t\t<div class="three wide field">\n';
-  html+= '\t\t\t<input type="text" name="{name}">\n'.supplant({
+  html= '\t\t\t<input type="text" name="{name}" placeholder="Limit">\n'.supplant({
     name: prefixStr(prefix, '[limit]')
   });
-  html+= '\t\t</div>\n';
-  html+= '\t</div>\n';
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.limit)).innerHTML = html;
 }
