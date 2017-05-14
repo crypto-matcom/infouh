@@ -18,4 +18,4 @@
 //= require leaflet
 //= require leaflet.awesome-markers
 //= require L.Control.Sidebar
-//= require_tree .
+//= require_tree ./application
