@@ -15,3 +15,6 @@ Rails.application.config.assets.precompile += %w( flat/circle-hover.css )
 Rails.application.config.assets.precompile += %w( flat/galleryeffect.css )
 Rails.application.config.assets.precompile += %w( flat/slider.css )
 Rails.application.config.assets.precompile += %w( flat/style.css )
+
+Rails.application.config.assets.precompile += %w( map.css )
+Rails.application.config.assets.precompile += %w( map.js )

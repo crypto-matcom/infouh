@@ -12,6 +12,9 @@
  *
  *= require_tree ./application
  *= require_self
+ *= require leaflet
+ *= require 'L.Control.Sidebar'
  */
+  @import "leaflet.awesome-markers";
   $import-google-fonts: false;
   @import "semantic-ui";

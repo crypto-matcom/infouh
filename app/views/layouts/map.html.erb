@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Map</title>
+    <%= csrf_meta_tags %>
+    <%= favicon_link_tag 'favicon.svg' %>
+    <%= stylesheet_link_tag    'map', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'map', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

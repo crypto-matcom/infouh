@@ -1,4 +1,6 @@
 class WelcomeController < ApplicationController
+  layout 'map', only: :map
+
   def dashboard
   end
 

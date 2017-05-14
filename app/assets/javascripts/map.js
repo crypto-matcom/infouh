@@ -15,4 +15,7 @@
 //= require twitter/bootstrap
 //= require semantic-ui
 //= require turbolinks
+//= require leaflet
+//= require leaflet.awesome-markers
+//= require L.Control.Sidebar
 //= require_tree ./application
