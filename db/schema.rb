@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510052900) do
+ActiveRecord::Schema.define(version: 20170514191133) do
 
   create_table "markers", force: :cascade do |t|
     t.string   "name"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 20170510052900) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source_id"], name: "index_markers_on_source_id"
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "source_id"
+    t.string   "question"
+    t.string   "query"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id"], name: "index_questions_on_source_id"
   end
 
   create_table "sources", force: :cascade do |t|

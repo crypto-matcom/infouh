@@ -38,11 +38,11 @@ function wizardGenerator(prefix, element, modal, title, perform){
     control+= '\t<div type="button" class="circular ui icon button" data-toggle="modal" data-target="#{modal_id}">\n'.supplant({
       modal_id: modalId
     });
-    control+= '\t<i class="browser large icon"></i>\n';
+    control+= '\t\t<i class="browser large icon"></i>\n';
     control+= '\t</div>\n';
     control+= '</div>\n';
 
-    html ='\n<div class="modal fade" id="{modal_id}" tabindex="-1" role="dialog" aria-labelledby="{modal_id}Title" aria-hidden="true">\n'.supplant({
+    html ='<div class="modal fade" id="{modal_id}" tabindex="-1" role="dialog" aria-labelledby="{modal_id}Title" aria-hidden="true">\n'.supplant({
       modal_id: modalId
     });
     html+='\t<div class="modal-dialog modal-lg" role="document">\n';
@@ -139,69 +139,81 @@ function wizardContentGenerator(prefix, element, modal, perform){
 }
 
 function wizardContentDataGenerator(prefix, element, modal, perform){
-  html = '';
-
-  html+='\t<div class="tabs tabs-style-linebox">\n';
+  html ='\t<div class="tabs tabs-style-linebox">\n';
   html+='\t\t<nav>\n';
   html+='\t\t\t<ul>\n';
-  html+='\t\t\t\t<li><a href="#section-linebox-1"><span>Columns</span></a></li>\n';
-  html+='\t\t\t\t<li><a href="#section-linebox-2"><span>Conditions</span></a></li>\n';
-  html+='\t\t\t\t<li><a href="#section-linebox-3"><span>Groups</span></a></li>\n';
-  html+='\t\t\t\t<li><a href="#section-linebox-4"><span>Having</span></a></li>\n';
-  html+='\t\t\t\t<li><a href="#section-linebox-5"><span>Orders</span></a></li>\n';
+  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-1"><span>Columns</span></a></li>\n'.supplant({
+    prefix: sanitize(prefix)
+  });
+  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-2"><span>Conditions</span></a></li>\n'.supplant({
+    prefix: sanitize(prefix)
+  });
+  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-3"><span>Groups</span></a></li>\n'.supplant({
+    prefix: sanitize(prefix)
+  });
+  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-4"><span>Having</span></a></li>\n'.supplant({
+    prefix: sanitize(prefix)
+  });
+  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-5"><span>Orders</span></a></li>\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+='\t\t\t</ul>\n';
   html+='\t\t</nav>\n';
   html+='\t<div class="content-wrap">\n';
 
   // COLUMNS
-  html+= '\t\t<section id="section-linebox-1">\n';
+  html+= '\t\t<section id="{prefix}section-linebox-1">\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
+    class: "ui small basic buttons loc-btn-10"
   });
   html+= '\t\t\t\t<div onclick="simpleColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>\n',
+    name: 'column',
     prefix: prefix
   });
   html+= '\t\t\t\t<div onclick="functionColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>\n',
+    name: 'function',
     prefix: prefix
   });
   html+= '\t\t\t\t<div onclick="aliasColumnGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>\n'
+    name: 'alias'
   });
   html+= '\t\t\t</div>\n';
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.columns)
   });
   html+= '\t\t</section>\n';
-  // CONDITIONS
 
-  html+= '\t\t<section id="section-linebox-2">\n';
+  // CONDITIONS
+  html+= '\t\t<section id="{prefix}section-linebox-2">\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
+    class: "ui small basic buttons loc-btn-10"
   });
   html+= '\t\t\t\t<div onclick="simpleConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>\n',
+    name: 'condition',
     prefix: prefix
   });
   html+= '\t\t\t\t<div onclick="betweenConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>\n',
+    name: 'between',
     prefix: prefix
   });
-  html+= '\t\t\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
-    metadata: selectedOptions(element),
-    prefix: prefix,
-    name: '<i class="align left icon"></i>\n',
-  });
+  // html+= '\t\t\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
+  //   metadata: selectedOptions(element),
+  //   prefix: prefix,
+  //   name: '',
+  // });
   html+= '\t\t\t\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
-    name: '<i class="align left icon"></i>\n',
+    name: 'nested query',
     prefix: prefix,
     modal: modal
   });
@@ -212,15 +224,16 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t</section>\n';
 
   // GROUPS
-
-  html+= '\t\t<section id="section-linebox-3">\n';
+  html+= '\t\t<section id="{prefix}section-linebox-3">\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
+    class: "ui small basic buttons loc-btn-10"
   });
   html+= '\t\t\t\t<div onclick="groupGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>\n'
+    name: 'group'
   });
   html+= '\t\t\t</div>\n';
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
@@ -229,15 +242,16 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t</section>\n';
 
   // HAVING
-
-  html+= '\t\t<section id="section-linebox-4">\n';
+  html+= '\t\t<section id="{prefix}section-linebox-4">\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
+    class: "ui small basic buttons loc-btn-10"
   });
   html+= '\t\t\t\t<div onclick="havingGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>\n'
+    name: 'having'
   });
   html+= '\t\t\t</div>\n';
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
@@ -246,15 +260,16 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t</section>\n';
 
   // ORDERS
-
-  html+= '\t\t<section id="section-linebox-5">\n';
+  html+= '\t\t<section id="{prefix}section-linebox-5">\n'.supplant({
+    prefix: sanitize(prefix)
+  });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
-    class: "ui small basic icon buttons"
+    class: "ui small basic buttons loc-btn-10"
   });
   html+= '\t\t\t\t<div onclick="orderGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     prefix: prefix,
-    name: '<i class="align left icon"></i>\n'
+    name: 'order'
   });
   html+= '\t\t\t</div>\n';
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
