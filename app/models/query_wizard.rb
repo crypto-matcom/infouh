@@ -238,7 +238,11 @@ class ParametricQuestion
     end
 
     def ToArray key, value
-
+      puts value
+      puts value['value']
+      a= "<select name=\"#{key}\" class=\"ui dropdorn backendDropdown\">#{value['value'].split(',').map{|e| "<option value=\"#{e}\">#{e}</option>"}.join('')}</select>"
+      puts a
+      return a
     end
 
     def Div value, _class

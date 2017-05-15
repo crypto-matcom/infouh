@@ -15,3 +15,12 @@ function sanitize(val){
 function prefixStr(prefix, string) {
   return prefix + string;
 }
+
+function objectifyForm(id) {//serialize data function
+  formArray = document.getElementById(id);
+  var returnArray = {};
+  for (var i = 0; i < formArray.length; i++){
+    returnArray[formArray[i]['name']] = formArray[i]['value'];
+  }
+  return returnArray;
+}

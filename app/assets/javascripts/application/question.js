@@ -93,12 +93,3 @@ function buildQuery(form_id, query_id) {
   json_data = objectifyForm(form_id);
   alert(query.supplant(json_data));
 }
-
-function objectifyForm(id) {//serialize data function
-  formArray = document.getElementById(id);
-  var returnArray = {};
-  for (var i = 0; i < formArray.length; i++){
-    returnArray[formArray[i]['name']] = formArray[i]['value'];
-  }
-  return returnArray;
-}
