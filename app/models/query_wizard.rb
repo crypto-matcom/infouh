@@ -191,6 +191,24 @@ class QueryWizard
     end
 end
 
+class ParametricQuestion
+  def initialize wizard
+    @queryWizard = wizard
+  end
+
+  def generate options
+    { name: options["name"], source_id: options["source"], question: JSON.generate(options["question"].to_unsafe_hash), query: options["query"] }
+  end
+
+  def parse model
+    { name: model.name, source: model.source, question: model.question.CreateHash, query: model.query }
+  end
+
+  def htmlCode model
+    return '<h1>Hello World</h1>'.html_safe
+  end
+end
+
 class String
   def CreateHash
     JSON.parse self

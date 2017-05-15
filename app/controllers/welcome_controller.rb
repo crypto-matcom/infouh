@@ -8,6 +8,7 @@ class WelcomeController < ApplicationController
   end
 
   def question
+    @questions = Question.all
   end
 
   def map

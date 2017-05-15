@@ -63,14 +63,14 @@ function wizardGenerator(prefix, element, modal, title, perform){
       id: select_id,
       modal: modal
     });
-    html+= '\t\t\t\t\t\t\t<option value="">Source</option>\n'
+    html+= '\t\t\t\t\t\t\t<option value="">Source</option>\n';
     for (source of response) {
       html+= '\t\t\t\t\t\t\t<option value="{value}">{name}</option>\n'.supplant({
         value: source[0],
         name: source[1],
       });
     }
-    html+='\t\t\t\t\t\t</select>\n'
+    html+='\t\t\t\t\t\t</select>\n';
     html+='\t\t\t\t\t</div>\n'
     html+='\t\t\t\t\t<div class="nine wide field" id="{id}"></div>\n'.supplant({
       id: "{prefix}{sufix}".supplant({
@@ -873,4 +873,9 @@ function limitGenerate(prefix, metadata){
     name: prefixStr(prefix, '[limit]')
   });
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.limit)).innerHTML = html;
+}
+
+
+function Remove(id) {
+  document.getElementById(id).remove();
 }

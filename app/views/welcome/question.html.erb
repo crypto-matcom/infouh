@@ -1,2 +1,137 @@
-<h1>Welcome#question</h1>
-<p>Find me in app/views/welcome/question.html.erb</p>
+<div class="loc-top-150 container">
+  <button type="button" class="ui icon button" data-toggle="modal" data-target="#createModal">
+    <i class="plus icon"></i>
+  </button>
+
+  <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <%= form_tag question_create_path, class: "ui form", id: "createQuestionForm" do %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="createModalTitle">Create question</h5>
+          <div class="fields">
+            <div class="six wide field">
+              <input type="text" name="question[name]" placeholder="Name">
+            </div>
+            <div class="three wide field">
+              <select class="ui fluid search dropdown" name="question[source]" id="mainSelect" onchange="document.getElementById('mainContent').innerHTML = '';">
+                <option value="">Source</option>
+                <option value="1">Source1</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="ui icon buttons">
+                <div class="ui button" onclick="setLabel('mainContent')">
+                  <i class="paragraph icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui icon buttons">
+                <div class="ui button" onclick="setField('mainContent', 'text')"><i class="font icon"></i></div>
+                <div class="ui button" onclick="setField('mainContent', 'datetime')"><i class="calendar icon"></i></div>
+                <div class="ui button" onclick="setField('mainContent', 'numeric')"><i class="sort numeric ascending icon"></i></div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui icon buttons">
+                <div class="ui button"><i class="list icon"></i></div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui icon buttons">
+                <div class="ui button"><i class="database icon"></i></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-body">
+            <div class="ui relaxed grid fields" id="mainContent">
+
+            </div>
+        </div>
+        <div class="modal-footer" id="controls">
+          <div class="field">
+            <input type="text" name="question[query]" placeholder="SQL query">
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-secondary">
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <table class="ui celled table loc-btn-100">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Source</th>
+        <th>Views</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @questions.each_with_index do |q, i| %>
+      <tr>
+        <td>
+          <div class="fluid ui button" style="background: #fff;" onclick="showQuestion(<%= q.id %>,'<%= q.name %>')"
+            data-toggle="modal" data-target="#showModal">
+            <%= q.name %>
+          </div>
+        </td>
+        <td><%= q.question %></td>
+        <td><%= q.query %></td>
+        <td>
+          <%= link_to question_delete_path(q) do %>
+              <i class="red large delete icon"></i>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr><th colspan="4">
+        <div class="ui right floated pagination menu">
+          <a class="icon item">
+            <i class="left chevron icon"></i>
+          </a>
+          <a class="item">1</a>
+          <a class="item">2</a>
+          <a class="item">3</a>
+          <a class="item">4</a>
+          <a class="icon item">
+            <i class="right chevron icon"></i>
+          </a>
+        </div>
+      </th>
+    </tr></tfoot>
+  </table>
+
+  <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showModalTitle">Create question</h5>
+        </div>
+        <div class="modal-body">
+        <%= form_tag '/welcome/', class: 'ui form', id: 'showForm' do%>
+
+        <% end %>
+        </div>
+        <div class="modal-footer" id="controls">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-secondary" onclick="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<script type="text/javascript">
+  loadForm('mainSelect', 'mainContent');
+</script>

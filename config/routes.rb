@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   match 'map/new' => 'map#new', as: 'create_marker', via: :post
 
   match 'question/create' => 'question#create', as: 'question_create', via: :post
-  match 'question/delete/:id' => 'question#delete', as: 'question_delete', via: :post
+  match 'question/show' => 'question#show', as: 'question_show', via: :post
+  match 'question/delete/:id' => 'question#delete', as: 'question_delete', via: [:get, :post]
 
   match 'wizard/test' => 'wizard#test', as: 'wizard_test', via: :post
   match 'wizard/tables' => 'wizard#tables', as: 'wizard_tables', via: :post
