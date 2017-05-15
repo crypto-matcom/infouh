@@ -16,7 +16,7 @@ formControls = {
   }
 }
 
-function wizardGenerator(prefix, element, modal, title, perform){
+function wizardGenerator(prefix, element, modal, title, perform, parent){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
@@ -38,7 +38,7 @@ function wizardGenerator(prefix, element, modal, title, perform){
     control+= '\t<div type="button" class="circular ui icon button" data-toggle="modal" data-target="#{modal_id}">\n'.supplant({
       modal_id: modalId
     });
-    control+= '\t\t<i class="browser large icon"></i>\n';
+    control+= '\t\t<i class="wizard large icon"></i>\n';
     control+= '\t</div>\n';
     control+= '</div>\n';
 
@@ -90,7 +90,10 @@ function wizardGenerator(prefix, element, modal, title, perform){
     });
     html+='\t\t\t</div>\n';
     html+='\t\t\t<div class="modal-footer">\n';
-    html+='\t\t\t\t<button type="button" class="btn btn-secondary" data-dismiss="modal">Hide</button>\n';
+    html+='\t\t\t\t<button type="button" class="{class}" data-dismiss="modal" onclick="ModalRefresh(\'{parent}\')">Hide</button>\n'.supplant({
+      class: "btn btn-secondary",
+      parent: parent
+    });
     if(perform){
       html+='\t\t\t\t<input type="submit" class="btn btn-secondary">\n';
     }
@@ -139,32 +142,28 @@ function wizardContentGenerator(prefix, element, modal, perform){
 }
 
 function wizardContentDataGenerator(prefix, element, modal, perform){
-  html ='\t<div class="tabs tabs-style-linebox">\n';
-  html+='\t\t<nav>\n';
-  html+='\t\t\t<ul>\n';
-  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-1"><span>Columns</span></a></li>\n'.supplant({
+  html = '\t<div class="ui secondary pointing menu">\n';
+  html+= '\t\t<a class="item active" data-tab="tab1{prefix}">Columns</a>\n'.supplant({
     prefix: sanitize(prefix)
   });
-  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-2"><span>Conditions</span></a></li>\n'.supplant({
+  html+= '\t\t<a class="item" data-tab="tab2{prefix}">Conditions</a>\n'.supplant({
     prefix: sanitize(prefix)
   });
-  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-3"><span>Groups</span></a></li>\n'.supplant({
+  html+= '\t\t<a class="item" data-tab="tab3{prefix}">Groups</a>\n'.supplant({
     prefix: sanitize(prefix)
   });
-  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-4"><span>Having</span></a></li>\n'.supplant({
+  html+= '\t\t<a class="item" data-tab="tab4{prefix}">Having</a>\n'.supplant({
     prefix: sanitize(prefix)
   });
-  html+='\t\t\t\t<li><a href="#{prefix}section-linebox-5"><span>Orders</span></a></li>\n'.supplant({
+  html+= '\t\t<a class="item" data-tab="tab5{prefix}">Orders</a>\n'.supplant({
     prefix: sanitize(prefix)
   });
-  html+='\t\t\t</ul>\n';
-  html+='\t\t</nav>\n';
-  html+='\t<div class="content-wrap ui form">\n';
+  html+= '\t</div>\n';
 
   // COLUMNS
-  html+= '\t\t<section id="{prefix}section-linebox-1" class="{class}">\n'.supplant({
-    prefix: sanitize(prefix),
-    class: "ui form"
+
+  html+= '\t\t<div class="ui bottom attached tab active" data-tab="tab1{prefix}">\n'.supplant({
+    prefix: sanitize(prefix)
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic buttons loc-btn-10"
@@ -188,10 +187,11 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.columns)
   });
-  html+= '\t\t</section>\n';
+  html+= '\t\t</div>\n';
+
 
   // CONDITIONS
-  html+= '\t\t<section id="{prefix}section-linebox-2">\n'.supplant({
+  html+= '\t\t<div class="ui bottom attached tab" data-tab="tab2{prefix}">\n'.supplant({
     prefix: sanitize(prefix)
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
@@ -207,11 +207,6 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
     name: 'between',
     prefix: prefix
   });
-  // html+= '\t\t\t\t<div onclick="includeConditionGenerate(\'{prefix}\', \'{metadata}\')" class="ui button">{name}</div>\n'.supplant({
-  //   metadata: selectedOptions(element),
-  //   prefix: prefix,
-  //   name: '',
-  // });
   html+= '\t\t\t\t<div onclick="includeConditionGenerate2(\'{prefix}\', \'{metadata}\', \'{modal}\')" class="ui button">{name}</div>\n'.supplant({
     metadata: selectedOptions(element),
     name: 'nested query',
@@ -222,10 +217,10 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.conditions)
   });
-  html+= '\t\t</section>\n';
+  html+= '\t\t</div>\n';
 
   // GROUPS
-  html+= '\t\t<section id="{prefix}section-linebox-3">\n'.supplant({
+  html+= '\t\t<div class="ui bottom attached tab" data-tab="tab3{prefix}">\n'.supplant({
     prefix: sanitize(prefix)
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
@@ -240,10 +235,10 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.groups)
   });
-  html+= '\t\t</section>\n';
+  html+= '\t\t</div>\n';
 
   // HAVING
-  html+= '\t\t<section id="{prefix}section-linebox-4">\n'.supplant({
+  html+= '\t\t<div class="ui bottom attached tab" data-tab="tab4{prefix}">\n'.supplant({
     prefix: sanitize(prefix)
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
@@ -258,10 +253,10 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.having)
   });
-  html+= '\t\t</section>\n';
+  html+= '\t\t</div>\n';
 
   // ORDERS
-  html+= '\t\t<section id="{prefix}section-linebox-5">\n'.supplant({
+  html+= '\t\t<div class="ui bottom attached tab" data-tab="tab5{prefix}">\n'.supplant({
     prefix: sanitize(prefix)
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
@@ -276,13 +271,14 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   html+= '\t\t\t<div id="{id}"></div>\n'.supplant({
     id: prefixStr(sanitize(prefix), formControls.tags.orders)
   });
-  html+= '\t\t</section>\n';
+  html+= '\t\t</div>\n';
   html+= '\t</div>\n';
 
 
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.contentData)).innerHTML = html
   limitGenerate(prefix, selectedOptions(element));
-  tabSetter();
+  $('.menu .item').tab();
+
 
 }
 
@@ -653,6 +649,11 @@ function includeConditionGenerate2(prefix, metadata, modal){
       prefix: sanitize(prefix),
       counter: counter
     });
+    modal_id = '{prefix}{tag}'.supplant({
+      tag: formControls.tags.modal,
+      prefix: sanitize(prefix)
+    })
+
     html = '\t<div class="{class}">\n'.supplant({
       class: "fields"
     });
@@ -693,7 +694,7 @@ function includeConditionGenerate2(prefix, metadata, modal){
     });
 
     $('#{id}'.supplant({id: prefixStr(sanitize(prefix), formControls.tags.conditions)})).append(html);
-    wizardGenerator(next_prefix, prefixStr('nestedQuery', counter), modal, 'Nested Query', false);
+    wizardGenerator(next_prefix, prefixStr('nestedQuery', counter), modal, 'Nested Query', false, modal_id);
     $('#{id}'.supplant({id:select_id})).dropdown();
 
     counter++;
@@ -880,4 +881,8 @@ function limitGenerate(prefix, metadata){
 
 function Remove(id) {
   document.getElementById(id).remove();
+}
+
+function ModalRefresh(id) {
+  $('#{id}'.supplant({id:id})).focus()
 }

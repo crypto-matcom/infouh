@@ -1,24 +1,26 @@
-<div class="loc-top-100">
+<div class="loc-top-100 container">
   <%= form_tag wizard_test_path, class: "ui form" do %>
     <div id='example'></div>
     <div id='form_modals'></div>
   <% end %>
 
-  <script type="text/javascript">
+  <%= render partial: 'partials/table'%>
 
-  wizardGenerator('query', 'example', 'form_modals', 'Build your query', true);
-
-  function includeConditionGenerate(prefix, metadata){
-    html = ''
-    return html
-  }
-
-  function selectedOptions(element){
-    return ["ABC"].join();
-  }
-  </script>
 </div>
-
 <script type="text/javascript">
-  tabSetter();
+
+wizardGenerator('query', 'example', 'form_modals', 'Build your query', true, 'none');
+
+function includeConditionGenerate(prefix, metadata){
+  html = ''
+  return html
+}
+
+function selectedOptions(element){
+  return ["ABC"].join();
+}
 </script>
+
+<!-- <script type="text/javascript">
+  tabSetter();
+</script> -->
