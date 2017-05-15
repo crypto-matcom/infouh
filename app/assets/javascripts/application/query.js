@@ -287,9 +287,9 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
 
 
 
-function optionsGenerator(data){
+function optionsGenerator(data, head){
   html = '\t';
-  html+= '<option value="">Column</option>\n'
+  html+= '<option value="">{head}</option>\n'.supplant({head:head})
   for (table of data) {
     html+= '\t\t\t<option disabled="true">{name}</option>\n'.supplant({
       name: table[0]
@@ -369,6 +369,7 @@ function insertBetweenInput(element, id, name){
 function simpleColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
     tables: metadata
+    // falta el source id
   }).done(function (response) {
     select_id = 'select{prefix}{counter}'.supplant({
       prefix: sanitize(prefix),
@@ -388,7 +389,7 @@ function simpleColumnGenerate(prefix, metadata){
       class: "ui dropdown",
       id: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n'
     html+= '\t\t\t<input type="hidden" name="{name}" value="single">\n'.supplant({
       name: '{prefix}[columns][column{counter}][type]'.supplant({
@@ -445,7 +446,7 @@ function functionColumnGenerate(prefix, metadata){
       class: "ui dropdown",
       id: select_id2
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n';
     html+= '\t\t</div>\n'
     html+= '\t\t<input type="hidden" name="{name}" value="function">\n'.supplant({
@@ -503,7 +504,7 @@ function aliasColumnGenerate(prefix, metadata){
       class: "ui dropdown",
       id: select_id2
     });
-    html+=optionsGenerator(response[0], 'method');
+    html+=optionsGenerator(response[0], 'Columns');
     html+='\t\t\t</select>\n'
     html+='\t\t</div>\n'
     html+='\t\t<div class="five wide field">\n';
@@ -558,7 +559,7 @@ function simpleConditionGenerate(prefix, metadata){
       class: "ui dropdown",
       sid: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n';
     html+= '\t\t</div>\n';
     html+= '\t\t<div class="two wide field">\n';
@@ -618,7 +619,7 @@ function betweenConditionGenerate(prefix, metadata){
       class: "ui dropdown",
       sid: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n';
     html+= '\t\t</div>\n';
     html+= '\t\t<label>BETWEEN</label>\n';
@@ -663,7 +664,7 @@ function includeConditionGenerate2(prefix, metadata, modal){
       class: "ui dropdown",
       sid: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n';
     html+= '\t\t</div>\n';
     html+= '\t\t<input type="hidden" name="{name}" value="inclusion">\n'.supplant({
@@ -718,7 +719,7 @@ function groupGenerate(prefix, metadata){
       class: "ui dropdown",
       id: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n'
     html+= '\t\t</div>\n'
     html+= '\t</div>\n'
@@ -783,7 +784,7 @@ function havingGenerate(prefix, metadata){
       class: "ui fluid search dropdown",
       sid: select_id2
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n';
     html+= '\t\t</div>\n';
     html+= '\t\t<div class="two wide field">\n';
@@ -842,7 +843,7 @@ function orderGenerate(prefix, metadata){
       class: "ui dropdown",
       sid: select_id
     });
-    html+= optionsGenerator(response[0], 'method');
+    html+= optionsGenerator(response[0], 'Columns');
     html+= '\t\t\t</select>\n'
     html+= '\t\t</div>\n';
     html+= '\t\t<div class="four wide field">\n';

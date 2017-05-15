@@ -66,7 +66,7 @@ function setField(content_id, type) {
     type: type
   });
   html+= '\t</div>\n';
-  html+= '\t<div class="one wide field">\n';
+  html+= '\t<div class="field">\n';
   html+= '\t\t<i class="grey delete icon" onclick="Remove(\'{id}\')"></i>\n'.supplant({
     id: container_id
   })
@@ -75,6 +75,54 @@ function setField(content_id, type) {
 
   $('#{id}'.supplant({id: content_id})).append(html);
   qcounter++;
+}
+
+function setDatabase(content_id, source_id) {
+  $.post('/wizard/columns',{
+    tables: 'all',
+    id: 1
+  }).done(function(response) {
+    container_id = "container{qcounter}".supplant({
+      qcounter: qcounter
+    });
+    select_id = 'selectpx{counter}'.supplant({
+      counter: counter
+    })
+
+    html = '\t<div class="{class}" id="{id}">\n'.supplant({
+      id: container_id,
+      class: "fields"
+    });
+    html+= '\t\t<div class="{class}">\n'.supplant({
+      class: "field"
+    });
+    html+= '\t\t\t<select name="{name}" class="{class}" id="{id}">\n'.supplant({
+      name: "question[question][input{qcounter}][value]".supplant({
+        qcounter: qcounter
+      }),
+      class: "ui dropdown",
+      id: select_id
+    });
+    html+= optionsGenerator(response[0], 'input{qcounter}'.supplant({
+      qcounter: qcounter
+    }));
+    html+= '\t\t\t</select>\n'
+    html+= '\t\t\t<input type="hidden" name="{name}" value="column">\n'.supplant({
+      name: 'question[question][input{qcounter}][type]'.supplant({
+        qcounter: qcounter
+      })
+    });
+    html+= '\t\t</div>\n'
+    html+= '\t\t<div class="field">\n';
+    html+= '\t\t\t<i class="grey delete icon" onclick="Remove(\'{id}\')"></i>\n'.supplant({
+      id: container_id
+    })
+    html+= '\t\t</div>\n';
+    html+= '\t</div>\n'
+    $('#{id}'.supplant({id: content_id})).append(html);
+    $('#{id}'.supplant({id: select_id})).dropdown();
+    counter++;
+  })
 }
 
 

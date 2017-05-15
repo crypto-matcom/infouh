@@ -207,12 +207,14 @@ class ParametricQuestion
   def htmlCode model
     html =''
     question = parse model
+    cs = @queryWizard.ConnectionString question[:source]
     question[:question].each_pair do |k, v|
-      value = ToLabel k,v if v['type'] == 'label'
-      value = ToText  k,v if v['type'] == 'Text'
-      value = ToDate  k,v if v['type'] == 'Datetime'
-      value = ToNum   k,v if v['type'] == 'Numeric'
-      value = ToArray k,v if v['type'] == 'array'
+      value = ToLabel  k,v if v['type'] == 'label'
+      value = ToText   k,v if v['type'] == 'Text'
+      value = ToDate   k,v if v['type'] == 'Datetime'
+      value = ToNum    k,v if v['type'] == 'Numeric'
+      value = ToArray  k,v if v['type'] == 'array'
+      value = ToColumn k,v, cs if v['type'] == 'column'
       html+= Div value, 'field'
     end
     html+="<input type=\"hidden\" name=\"query\" id=\"showQuery\"  value=\"#{question[:query]}\">"
@@ -238,11 +240,18 @@ class ParametricQuestion
     end
 
     def ToArray key, value
-      puts value
-      puts value['value']
-      a= "<select name=\"#{key}\" class=\"ui dropdorn backendDropdown\">#{value['value'].split(',').map{|e| "<option value=\"#{e}\">#{e}</option>"}.join('')}</select>"
-      puts a
-      return a
+      Select key, value['value'].split(',')
+    end
+
+    def ToColumn key, value, connection
+      split = value['value'].split '.'
+      result = @queryWizard.Query connection, "SELECT #{split[1]} FROM #{split[0]}"
+      logs = result.map {|e| e[split[1]] }
+      Select key, logs
+    end
+
+    def Select name, options
+      "<select name=\"#{name}\" class=\"ui dropdorn backendDropdown\">#{options.map{|e| "<option value=\"#{e}\">#{e}</option>"}.join}</select>"
     end
 
     def Div value, _class
@@ -251,7 +260,6 @@ class ParametricQuestion
       html+= "</div>"
       return html
     end
-
 end
 
 class String
