@@ -159,11 +159,12 @@ function wizardContentDataGenerator(prefix, element, modal, perform){
   });
   html+='\t\t\t</ul>\n';
   html+='\t\t</nav>\n';
-  html+='\t<div class="content-wrap">\n';
+  html+='\t<div class="content-wrap ui form">\n';
 
   // COLUMNS
-  html+= '\t\t<section id="{prefix}section-linebox-1">\n'.supplant({
-    prefix: sanitize(prefix)
+  html+= '\t\t<section id="{prefix}section-linebox-1" class="{class}">\n'.supplant({
+    prefix: sanitize(prefix),
+    class: "ui form"
   });
   html+= '\t\t\t<div class="{class}">\n'.supplant({
     class: "ui small basic buttons loc-btn-10"

@@ -1,0 +1,203 @@
+<%= form_for @classification, :url => if @update then classifications_update_path elsif @remove then classifications_destroy_path else classifications_path end do |f| %>
+
+  <% if @classification.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@classification.errors.count, "error") %> prohibited this classification from being saved:</h2>
+
+      <ul>
+      <% @classification.errors.full_messages.each do |message| %>
+        <!-- <li><%= message %></li> -->
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<div class="content">
+    <% if @update %>
+      <label>Seleccionar <b>Clasificación</b> a editar</label>
+
+      <%= f.select :id, Classification.all.map {|f| [f.name, f.id]}, {}, class: "ui input search dropdown input-size" %>
+
+      <div class="ui divider"></div>
+    <% else %>
+      <label>Clasificación</label>
+    <% end %>
+
+    <%= f.hidden_field :visible, :value => false %>
+
+    <% if @remove %>
+      <div class="ui right labeled left icon input input-size">
+        <i class="options icon"></i>
+            <%= f.text_field :name, placeholder: "Categorías"%>
+        <button type="submit" class="ui tag back-lightpurple label tagab "><div style="margin-bottom: 10px;"> Eliminar </div></button>
+      </div>
+
+    <% else %>
+
+    <div class="ui input input-size">
+      <%= f.text_field :name, placeholder: "#{"Editar " if @update}Nombre"%>
+    </div>
+
+    <%= f.select :service_id, Service.all.map {|f| [f.name, f.id]}, {}, class: "ui input search dropdown input-size" %>
+
+    <div class="ui selection dropdown input input-size">
+      <%= f.hidden_field :icon, id: "classification-icon" %>
+      <i class="dropdown icon"></i>
+      <div class="default text">Ícono</div>
+      <div class="menu">
+        
+        <div class="divider"></div>
+        <div class="header">Instituciones</div>
+        <div class="item" data-value="money"><i class="money grey icon"></i>banco</div>
+        <div class="item" data-value="info"><i class="info grey icon"></i>información</div>
+        <div class="item" data-value="desktop"><i class="desktop grey icon"></i>electrónica</div>
+        <div class="item" data-value="phone"><i class="call grey icon"></i>comunicación</div>
+        <div class="item" data-value="envelope"><i class="envelope grey icon"></i>correo</div>
+        <div class="item" data-value="flask"><i class="lab grey icon"></i>laboratorio</div>
+        <div class="item" data-value="cloud"><i class="cloud grey icon"></i>meteorología</div>
+
+        <div class="item" data-value="shield"><i class="protect grey icon"></i>policía</div>
+        <div class="item" data-value="fire-extinguisher"><i class="fire extinguisher grey icon"></i>bomberos</div>
+        <div class="item" data-value="legal"><i class="legal grey icon"></i>leyes</div>
+        <div class="item" data-value="folder"><i class="folder grey icon"></i>archivos</div>
+        <div class="item" data-value="flag"><i class="flag grey icon"></i>embajada</div>
+        <div class="item" data-value="link"><i class="linkify grey icon"></i>prisión</div>
+        <div class="item" data-value="tint"><i class="tint grey icon"></i>hidráulica</div>
+        <div class="item" data-value="trash-o"><i class="trash grey icon"></i>comunales</div>
+        <div class="item" data-value="anchor"><i class="anchor grey icon"></i>navío</div>
+        <div class="item" data-value="wrench"><i class="wrench grey icon"></i>reparación</div>
+
+        <div class="item" data-value="users"><i class="users grey icon"></i>grupos de ayuda</div>
+        <div class="item" data-value="leaf"><i class="leaf grey icon"></i>medio ambiente</div>
+        <div class="item" data-value="recycle"><i class="recycle grey icon"></i>recicleje</div>
+        <div class="item" data-value="bug"><i class="bug grey icon"></i>veterinaria</div>
+        
+        <div class="item" data-value="wheelchair"><i class="handicap greyify icon"></i>hogar de ancianos</div>
+        <div class="item" data-value="eye"><i class="eye grey icon"></i>escuela de arte</div>
+        <div class="item" data-value="pencil"><i class="write grey icon"></i>escuela</div>
+        <div class="item" data-value="dribbble"><i class="soccer grey icon"></i>deporte</div>
+
+        <div class="divider"></div>
+        <div class="header">Entretenimiento </div>
+        <div class="item" data-value="camera"><i class="camera grey icon"></i>fotografía</div>
+        <div class="item" data-value="picture-o"><i class="image grey icon"></i>arte</div>
+        <div class="item" data-value="video-camera"><i class="record grey icon"></i>cine</div>
+        <div class="item" data-value="film"><i class="film grey icon"></i>película</div>
+        <div class="item" data-value="music"><i class="music down grey icon"></i>música</div>
+        <div class="item" data-value="volume-up"><i class="volume up grey icon"></i>volumen </div>
+        <div class="item" data-value="headphones"><i class="sound down grey icon"></i>audífonos</div>
+        <div class="item" data-value="ticket"><i class="ticket grey icon"></i>feria</div>
+        <div class="item" data-value="microphone"><i class="microphone grey icon"></i>radio</div>
+        <div class="item" data-value="magic"><i class="wizard grey icon"></i>circo</div>
+        <div class="item" data-value="book"><i class="book grey icon"></i>biblioteca o librería</div>
+        <div class="item" data-value="gamepad"><i class="game grey icon"></i>sala de juegos</div>
+        <div class="item" data-value="child"><i class="child grey icon"></i>parque</div>
+        <div class="item" data-value="glass"><i class="cocktail grey icon"></i>bar</div>
+        <div class="item" data-value="coffee"><i class="coffee grey icon"></i>café</div>
+        <div class="item" data-value="cutlery"><i class="food grey icon"></i>restaurante</div>
+        <div class="item" data-value="plus"><i class="plus grey icon"></i>hospital</div>
+        <!--<div class="item" data-value="university"><i class="university grey icon"></i>universidad</div>
+        <div class="item" data-value="info"><i class="info greyify icon"></i>hospital</div>
+        <div class="item" data-value="info"><i class="info greyify icon"></i>iglesia</div>
+        <div class="item" data-value="info"><i class="paw greyify icon"></i>veterinario</div>
+        <div class="item" data-value="info"><i class="hotel greyify icon"></i>hotel</div> -->
+        
+        <div class="divider"></div>
+        <div class="header">Transporte </div>
+        <div class="item" data-value="road"><i class="road grey icon"></i>carretera</div>
+        <div class="item" data-value="car"><i class="car grey icon"></i>carro</div>
+        <div class="item" data-value="bus"><i class="bus grey icon"></i>guagua</div>
+        <div class="item" data-value="truck"><i class="truck grey icon"></i>camión</div>
+        <!-- <div class="item" data-value="taxi"><i class="taxi grey icon"></i>taxi</div> -->
+        <!-- <div class="item" data-value="bicycle"><i class="bicycle grey icon"></i>bicicleta</div> -->
+        <!-- <div class="item" data-value="motorcycle"><i class="motorcycle grey icon"></i>motocicleta</div> -->
+        <!-- <div class="item" data-value="train"><i class="train grey icon"></i>tren</div> -->
+        <!-- <div class="item" data-value="subway"><i class="subway grey icon"></i>subway</div> -->
+        <!-- <div class="item" data-value="ship"><i class="ship grey icon"></i>barco</div> -->
+        <div class="item" data-value="plane"><i class="plane grey icon"></i>avión</div>
+        <div class="item" data-value="fighter-jet"><i class="military grey icon"></i>jet militar</div>
+        <div class="item" data-value="rocket"><i class="rocket grey icon"></i>rocket</div>
+
+        <div class="divider"></div>
+        <div class="header">Vacaciones </div>
+        <div class="item" data-value="sun-o"><i class="sun grey icon"></i>sol</div>
+        <div class="item" data-value="umbrella"><i class="umbrella grey icon"></i>sombrilla</div>
+        <div class="item" data-value="camera-retro"><i class="camera retro grey icon"></i>retro</div>
+        <div class="item" data-value="suitcase"><i class="suitcase grey icon"></i>equipaje</div>
+        <div class="item" data-value="angle-double-up"><i class="angle double up grey icon"></i>playa</div>
+
+        <div class="divider"></div>
+        <div class="header">Tecnología </div>
+        <div class="item" data-value="terminal"><i class="terminal grey icon"></i>terminal</div>
+        <div class="item" data-value="tablet"><i class="tablet grey icon"></i>tablets y móviles</div>
+        <div class="item" data-value="laptop"><i class="laptop grey icon"></i>computadoras</div>
+        <div class="item" data-value="print"><i class="print grey icon"></i>impresiones</div>
+        <div class="item" data-value="rss"><i class="wifi grey icon"></i>wifi</div>
+
+        <div class="divider"></div>
+        <div class="header">Compras </div>
+        <div class="item" data-value="puzzle-piece"><i class="puzzle grey icon"></i>tienda de juegos</div>
+        <!-- <div class="item" data-value="trophy"><i class="trophy grey icon"></i>trofeo</div> -->
+        <div class="item" data-value="diamond"><i class="diamond grey icon"></i>joyería</div>
+        <div class="item" data-value="shopping-cart"><i class="shop grey icon"></i>tienda</div>
+        <div class="item" data-value="gift"><i class="gift grey icon"></i>regalo</div>
+ 
+        <div class="divider"></div>
+        <div class="header">Edificios</div>
+        <div class="item" data-value="home"><i class="home grey icon"></i>hogar</div>
+
+
+        <div class="header">Otras formas </div>
+        <div class="item" data-value="asterisk"><i class="asterisk grey icon"></i>asterisco</div>
+        <div class="item" data-value="certificate"><i class="certificate grey icon"></i>certificado</div>
+        <div class="item" data-value="circle-o"><i class="circle thin grey icon"></i>círculo</div>
+        <div class="item" data-value="circle"><i class="circle grey icon"></i>círculo lleno</div>
+        <div class="item" data-value="circle-o-noth"><i class="circle notched grey icon"></i>círculo notch</div>
+        <div class="item" data-value="square-o"><i class="square outline grey icon"></i>cuadrado</div>
+        <div class="item" data-value="square"><i class="square grey icon"></i>cuadrado lleno</div>
+        <div class="item" data-value="cube"><i class="cube grey icon"></i>cubo</div>
+        <div class="item" data-value="cubes"><i class="cubes grey icon"></i>cubos</div>
+        <div class="item" data-value="bullseye"><i class="bullseye grey icon"></i>bullseye</div>
+        <div class="item" data-value="check"><i class="check grey icon"></i>palomilla</div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+      <div class="col-sm-6">
+
+      <% if userIsAdmin? %>
+            <div class="row space" style="margin-top: 25px; margin-bottom: 0px;" data-tooltip="Hacerla pública" data-position="top left">
+              <div class="col-sm-1">
+                <%= f.check_box :visible %>
+              </div>
+              <div class="col-sm-6 small-padding" style="font-size: 12px;">
+                <%= f.label :pública %>
+              </div>
+            </div>
+      <%end%>
+      </div>
+
+      <div class="col-sm-6">
+        <%= f.submit "Guardar", class: "input grey  ui back-lightpurple button float-right" %>
+      </div>
+    <% end %>
+  </div>
+
+<% end %>
+
+
+<script type="text/javascript">
+
+  // var ico = $('.item .selected').attr('data-value');
+  // $('#classification-icon').attr('value', ico);
+
+  // $('.menu .item').on('click', function() {
+    
+  //   var icon = $(this).attr('data-value');
+  //   $('#classification-icon').attr('value', icon);
+
+  // });
+</script>
