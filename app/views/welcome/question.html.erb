@@ -22,21 +22,23 @@
 
             <div class="field">
               <div class="ui icon buttons">
-                <div class="ui button" onclick="setLabel('mainContent')">
+                <div class="ui button" onclick="setLabel('mainContent','label','Label', '[value]')">
                   <i class="paragraph icon"></i>
                 </div>
               </div>
             </div>
             <div class="field">
               <div class="ui icon buttons">
-                <div class="ui button" onclick="setField('mainContent', 'text')"><i class="font icon"></i></div>
-                <div class="ui button" onclick="setField('mainContent', 'datetime')"><i class="calendar icon"></i></div>
-                <div class="ui button" onclick="setField('mainContent', 'numeric')"><i class="sort numeric ascending icon"></i></div>
+                <div class="ui button" onclick="setField('mainContent', 'Text')"><i class="font icon"></i></div>
+                <div class="ui button" onclick="setField('mainContent', 'Datetime')"><i class="calendar icon"></i></div>
+                <div class="ui button" onclick="setField('mainContent', 'Numeric')"><i class="sort numeric ascending icon"></i></div>
               </div>
             </div>
             <div class="field">
               <div class="ui icon buttons">
-                <div class="ui button"><i class="list icon"></i></div>
+                <div class="ui button" onclick="setLabel('mainContent','array','Value1, Value2, ... input{qcounter}', '[value][]')">
+                  <i class="list icon"></i>
+                </div>
               </div>
             </div>
             <div class="field">
@@ -82,8 +84,8 @@
             <%= q.name %>
           </div>
         </td>
-        <td><%= q.question %></td>
-        <td><%= q.query %></td>
+        <td><%= q.source.name %></td>
+        <td><%= i %></td>
         <td>
           <%= link_to question_delete_path(q) do %>
               <i class="red large delete icon"></i>
@@ -123,7 +125,7 @@
         </div>
         <div class="modal-footer" id="controls">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input type="submit" class="btn btn-secondary" onclick="">
+          <input type="submit" class="btn btn-secondary" onclick="buildQuery('showForm', 'showQuery')">
         </div>
       </div>
     </div>

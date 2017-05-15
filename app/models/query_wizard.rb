@@ -201,12 +201,53 @@ class ParametricQuestion
   end
 
   def parse model
-    { name: model.name, source: model.source, question: model.question.CreateHash, query: model.query }
+    { name: model.name, source: model.source.connectionInfo, question: model.question.CreateHash, query: model.query }
   end
 
   def htmlCode model
-    return '<h1>Hello World</h1>'.html_safe
+    html =''
+    question = parse model
+    question[:question].each_pair do |k, v|
+      value = ToLabel k,v if v['type'] == 'label'
+      value = ToText  k,v if v['type'] == 'Text'
+      value = ToDate  k,v if v['type'] == 'Datetime'
+      value = ToNum   k,v if v['type'] == 'Numeric'
+      value = ToArray k,v if v['type'] == 'array'
+      html+= Div value, 'field'
+    end
+    html+="<input type=\"hidden\" name=\"query\" id=\"showQuery\"  value=\"#{question[:query]}\">"
+    return Div html, 'ui relaxed grid fields'
   end
+
+  private
+
+    def ToLabel key, value
+      "<label>#{value['value']}</label>"
+    end
+
+    def ToText key, value
+      "<input type=\"text\" name=\"#{key}\" value=\"\">"
+    end
+
+    def ToDate key, value
+      "<input type=\"text\" name=\"#{key}\" value=\"\">"
+    end
+
+    def ToNum key, value
+      "<input type=\"text\" name=\"#{key}\" value=\"\">"
+    end
+
+    def ToArray key, value
+
+    end
+
+    def Div value, _class
+      html = "<div class=\"#{_class}\">"
+      html+= value
+      html+= "</div>"
+      return html
+    end
+
 end
 
 class String
