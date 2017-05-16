@@ -14,14 +14,16 @@
         <i class="reply icon"></i>
         <% end %>
       </li>
-      <li><a href="#home" role="tab"><i class="content icon"></i></a></li>
-      <li><a href="#profile" role="tab"><i class="map pin icon"></i></a></li>
+      <li><a href="#home" role="tab" id="showAPP"><i class="content icon"></i></a></li>
+      <li><a href="#profile" role="tab" id="newAPP"><i class="marker icon"></i></a></li>
       <!-- <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li> -->
       <!-- <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a></li> -->
     </ul>
 
     <ul role="tablist">
-      <!-- <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li> -->
+      <li><%= link_to new_consult_path do %>
+        <i class="plus icon"></i>
+        <% end %></li>
     </ul>
   </div>
 
@@ -31,10 +33,11 @@
       <h1 class="sidebar-header" id="markerHeader">
 
       </h1>
-
+      <br>
       <div id="markerDescription">
 
       </div>
+      <br>
 
       <div id="markerQuestions">
 
@@ -84,10 +87,17 @@
 		});
 
 		L.marker([<%= marker.lat %>, <%= marker.lng %>], {icon: marker}).addTo(map).on('click', function () {
+      document.getElementById('showAPP').click()
+      document.getElementById('markerQuestions').innerHTML = ""
       document.getElementById('markerHeader').innerHTML = '<%= marker.name %>'
       document.getElementById('markerDescription').innerHTML = '<%= marker.description %>'
-      <% marker.queries.each do |query| %>
-
+      <% marker.consults.each do |consult| %>
+        html ="<form action='/welcome/show' method='post' class='ui form'>"
+        html+="<input type='hidden' name='query' value=\"<%= consult.code %>\">"
+        html+="<input type='hidden' name='id' value=\"<%= consult.source_id %>\">"
+        html+="<input type='submit' class='fluid ui button' value='<%= consult.name %>' style='background: white;'>"
+        html+="</form>"
+        $('#markerQuestions').append(html)
       <% end %>
 	  });
     <% end %>

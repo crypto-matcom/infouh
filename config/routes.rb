@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :consults
   resources :sources
   get 'welcome/dashboard'
   get 'welcome/query'

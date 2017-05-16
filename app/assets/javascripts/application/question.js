@@ -80,13 +80,13 @@ function setField(content_id, type) {
 function setDatabase(content_id, source_id) {
   $.post('/wizard/columns',{
     tables: 'all',
-    id: 1
+    id: $('#mainSelect').val()
   }).done(function(response) {
     container_id = "container{qcounter}".supplant({
       qcounter: qcounter
     });
-    select_id = 'selectpx{counter}'.supplant({
-      counter: counter
+    select_id = 'selectpx{qcounter}'.supplant({
+      qcounter: qcounter
     })
 
     html = '\t<div class="{class}" id="{id}">\n'.supplant({
@@ -121,7 +121,7 @@ function setDatabase(content_id, source_id) {
     html+= '\t</div>\n'
     $('#{id}'.supplant({id: content_id})).append(html);
     $('#{id}'.supplant({id: select_id})).dropdown();
-    counter++;
+    qcounter++;
   })
 }
 
@@ -139,5 +139,7 @@ function showQuestion(id, name) {
 function buildQuery(form_id, query_id) {
   query = $('#{id}'.supplant({id:query_id})).attr('value');
   json_data = objectifyForm(form_id);
-  alert(query.supplant(json_data));
+  result = query.supplant(json_data);
+  $('#{id}'.supplant({id:query_id})).attr('value', result);
+  $('#' + form_id).submit();
 }

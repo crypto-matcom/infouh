@@ -221,6 +221,7 @@ class ParametricQuestion
       value = ToColumn k,v, cs if v['type'] == 'column'
       html+= Div value, 'field'
     end
+    html+="<input type=\"hidden\" name=\"id\" id=\"showId\" value=\"#{model.source_id}\">"
     html+="<input type=\"hidden\" name=\"query\" id=\"showQuery\"  value=\"#{question[:query]}\">"
     return Div html, 'ui relaxed grid fields'
   end
