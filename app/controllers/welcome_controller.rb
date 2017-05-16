@@ -7,6 +7,12 @@ class WelcomeController < ApplicationController
   def query
   end
 
+  def show
+    @queryWizard = ::QueryWizard.new
+    data = @queryWizard.Query @queryWizard.ConnectionString(Source.find(params[:id]).connectionInfo), params[:query]
+    @teble = createTable data
+  end
+
   def question
     @questions = Question.all
   end

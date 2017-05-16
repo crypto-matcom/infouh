@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  data: MyString
+  marker: one
+
+two:
+  name: MyString
+  data: MyString
+  marker: two

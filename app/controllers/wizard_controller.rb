@@ -11,17 +11,15 @@ class WizardController < ApplicationController
     Source.all.each { |e| sources["source#{e.id}"] = @queryWizard.ConnectionString(e.connectionInfo) }
     data = @queryWizard.Run params[params[:prefix]], sources
 
-    ign = (0..100).map { |e| e }
+    ign = (0..100)
     xm = Builder::XmlMarkup.new(:indent => 2)
     xm.table {
       xm.tr { data[0].keys.select{|x| !ign.include?(x) }.each { |key| xm.th(key)}}
       data.each { |row| xm.tr { row.each_pair { |key, value| xm.td(value) unless ign.include?(key) }}}
     }
-    result = "#{xm}"
-
 
     respond_to do |format|
-      format.json { render json: [result] }
+      format.json { render json: [xm.to_s] }
     end
   end
 

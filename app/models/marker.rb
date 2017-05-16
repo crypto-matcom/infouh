@@ -1,3 +1,3 @@
 class Marker < ApplicationRecord
-  belongs_to :source
+  has_many :queries
 end

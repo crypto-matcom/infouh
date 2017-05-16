@@ -28,7 +28,7 @@ class QueryWizard
   end
 
   def Run options, connectionStrings
-    Query connectionStrings["source#{options["source"]}"], QueryBuilder(connectionStrings["source#{options["source"]}"], options, connectionStrings)
+    Query connectionStrings["source#{options["source"]}"], ConformQuery(options, connectionStrings)
   end
 
   def Query connectionString, sql
@@ -37,9 +37,9 @@ class QueryWizard
   end
 
   # Deprecated
-  def ConformQuery connectionString, options, connectionStrings = {}
+  def ConformQuery options, connectionStrings = {}
     # CreateContext connectionString
-    QueryBuilder connectionString, options, connectionStrings
+    QueryBuilder options, connectionStrings
   end
 
   def RelationshipTable connectionString
@@ -99,9 +99,9 @@ class QueryWizard
       column1.sql_type == column2.sql_type && column1.name == column2.name
     end
 
-    def QueryBuilder connectionString, options, connectionStrings = {}
-      [ SetColumns(options["columns"]), SetTables(connectionString, options["tables"]),
-        SetConditions(connectionString, options["conditions"], connectionStrings), SetGroups(options["groups"]),
+    def QueryBuilder options, connectionStrings = {}
+      [ SetColumns(options["columns"]), SetTables(connectionStrings["source#{options["source"]}"], options["tables"]),
+        SetConditions(options["conditions"], connectionStrings), SetGroups(options["groups"]),
         SetHavings(options["having"]), SetOrders(options["orders"]),
         SetLimits(options["limit"]) ].select { |e| e != nil }.join ' '
     end
@@ -114,8 +114,8 @@ class QueryWizard
       "FROM #{ TableBuilder c, options }" if options != nil
     end
 
-    def SetConditions c, options, connectionStrings = {}
-      "WHERE #{options.each_value.map { |e| ConditionBuilder c, e, connectionStrings }.select {|x| x != nil }.join ' AND '}" if options != nil
+    def SetConditions options, connectionStrings = {}
+      "WHERE #{options.each_value.map { |e| ConditionBuilder e, connectionStrings }.select {|x| x != nil }.join ' AND '}" if options != nil
     end
 
     def SetGroups options
@@ -143,7 +143,7 @@ class QueryWizard
       c.first
     end
 
-    def ConditionBuilder connectionString, c, connectionStrings
+    def ConditionBuilder c, connectionStrings
       if c["type"] == "inclusion"
         if c["value_type"] == "query"
           result = Run c["value"], connectionStrings
@@ -157,7 +157,7 @@ class QueryWizard
     end
 
     def Quotes value, type
-      quotesRequired = ["string", "datetime"]
+      quotesRequired = ["string", "datetime", "text"]
       quotesRequired.include?(type) ? "'#{value}'" : value
     end
 

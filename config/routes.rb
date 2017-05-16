@@ -4,10 +4,13 @@ Rails.application.routes.draw do
   get 'welcome/query'
   get 'welcome/question'
   get 'welcome/map'
+  get 'welcome/show'
+  post 'welcome/show'
 
   root to: 'welcome#dashboard'
 
-  match 'map/new' => 'map#new', as: 'create_marker', via: :post
+  match 'map/create' => 'map#create', as: 'create_marker', via: :post
+  match 'map/markers' => 'map#markers', as: 'markers', via: :post
 
   match 'question/create' => 'question#create', as: 'question_create', via: :post
   match 'question/show' => 'question#show', as: 'question_show', via: :post

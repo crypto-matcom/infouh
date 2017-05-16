@@ -28,42 +28,40 @@
   <!-- Tab panes -->
   <div class="sidebar-content">
     <div class="sidebar-pane" id="home">
-      <h1 class="sidebar-header">
-        sidebar-v2
+      <h1 class="sidebar-header" id="markerHeader">
+
       </h1>
 
-      <div class="">
+      <div id="markerDescription">
 
-        <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+      </div>
 
-        <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et  justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-        <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et  justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-        <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et  justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-        <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et  justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+      <div id="markerQuestions">
 
       </div>
     </div>
 
     <div class="sidebar-pane" id="profile">
       <h1 class="sidebar-header">Create marker</h1>
-      <%= form_tag 'marker/create', class: "ui form" do %>
-        <input type="text" name="marker[name]" value="">
-        <input type="text" name="marker[name]" value="">
-        <input type="text" name="marker[name]" value="">
-        <input type="text" name="marker[name]" value="">
+      <%= form_tag create_marker_path, class: "ui form" do %>
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="marker[name]" value="">
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <input type="text" name="marker[description]" value="">
+          </div>
+          <div class="field">
+            <label>Color</label>
+            <input type="text" name="marker[color]" value="">
+          </div>
+          <input type="hidden" name="marker[lat]" id='lat' value="">
+          <input type="hidden" name="marker[lng]" id='lng' value="">
+          <%= submit_tag "Submit", class: 'ui button' %>
       <% end %>
     </div>
 
-    <div class="sidebar-pane" id="messages">
-      <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-right"></i></span></h1>
-    </div>
-
-    <div class="sidebar-pane" id="settings">
-      <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-right"></i></span></h1>
-    </div>
   </div>
 </div>
 
@@ -71,19 +69,26 @@
 
   var sidebar = L.control.sidebar('sidebar', {position: 'right'}).addTo(map);
 
+  map.on('click', function(m){
+    $('#lat').attr('value', m.latlng.lat)
+    $('#lng').attr('value', m.latlng.lng)
+  })
+
 </script>
 
 <script type="text/javascript">
-
+    <% @markers.each do |marker| %>
 		var marker = L.AwesomeMarkers.icon({
-		  icon: 'home',
-		  markerColor: 'red',
+		  markerColor: '<%= marker.color %>',
       iconColor: 'white'
 		});
 
+		L.marker([<%= marker.lat %>, <%= marker.lng %>], {icon: marker}).addTo(map).on('click', function () {
+      document.getElementById('markerHeader').innerHTML = '<%= marker.name %>'
+      document.getElementById('markerDescription').innerHTML = '<%= marker.description %>'
+      <% marker.queries.each do |query| %>
 
-
-		L.marker([23.13600916719015, -82.38191485404968], {icon: marker}).addTo(map).on('click', function () {
-
+      <% end %>
 	  });
+    <% end %>
 </script>
