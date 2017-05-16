@@ -1,7 +1,27 @@
 <div class="loc-top-100 container">
   <%= form_tag wizard_test_path, class: "ui form", id: 'mainForm00' do %>
-    <div id='example'></div>
     <div id='form_modals'></div>
+    <div class="fields">
+      <div id='example'></div>
+      <div class="field">
+        <input type="text" name="nodata2" placeholder="Quesiton?" id="nameID">
+      </div>
+      <div class="field">
+
+      <select class="ui dropdown" name="nodata" id="selectID">
+        <option value="">Place</option>
+        <% Marker.all.each do |m| %>
+        <option value="<%= m.id %>"><%= m.name %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="field">
+
+      <div class="circular ui icon button" onclick="setQuery('query', 'nameID', 'mainForm00', 'selectID')">
+        <i class="apple large icon"></i>
+      </div>
+    </div>
+    </div>
   <% end %>
 
   <div class="" id="tableContainer00">
@@ -10,7 +30,7 @@
 
 </div>
 <script type="text/javascript">
-
+$('.ui.dropdown').dropdown();
 wizardGenerator('query', 'example', 'form_modals', '<i class="wizard big icon"></i>', true, 'none');
 
 function showTable(){

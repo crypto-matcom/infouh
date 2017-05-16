@@ -1026,6 +1026,22 @@ function insertBetweenInput(element, id, name){
   document.getElementById(id).innerHTML = html;
 }
 
+function setQuery(prefix, name_id, form_id, marker_id) {
+  $.post('/wizard/test', $('#{id}'.supplant({id:form_id})).serialize())
+  .done(function(response) {
+    select_id = "{prefix}{tag}".supplant({
+      tag: formControls.tags.source,
+      prefix: sanitize(prefix)
+    });
+    alert(response)
+    $.post('/consults',{consult: {
+      marker_id: $('#{id}'.supplant({id: marker_id})).val(),
+      source_id: $('#{id}'.supplant({id: select_id})).val(),
+      name: $('#{id}'.supplant({id: name_id})).val(),
+      code: response[0]
+    }})
+  })
+}
 
 function selectedOptions(element){
   return 'deprecated';

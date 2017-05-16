@@ -38,7 +38,6 @@ class QueryWizard
 
   # Deprecated
   def ConformQuery options, connectionStrings = {}
-    # CreateContext connectionString
     QueryBuilder options, connectionStrings
   end
 
