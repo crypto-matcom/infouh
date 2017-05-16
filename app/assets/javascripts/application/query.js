@@ -1009,9 +1009,9 @@ function insertBetweenInput(element, id, name){
 
   switch (dataType) {
     default:
-      html+= inputString(name, 1);
+      html+= inputString(prefixStr(name,'[value1]'), 1);
       html+= '\t\t<label stype="padding: 10px;">AND</label>\n';
-      html+= inputString(name, 2);
+      html+= inputString(prefixStr(name,'[value2'), 2);
   }
 
   html+= '\t\t<input type="hidden" name="{name}[value1][type]" value="{type}">\n'.supplant({

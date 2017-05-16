@@ -130,7 +130,7 @@ class QueryWizard
     end
 
     def SetLimits options
-      "LIMIT #{options}" if options != nil
+      "LIMIT #{options}" if options != nil && options != ''
     end
 
     def ColumnBuilder c
