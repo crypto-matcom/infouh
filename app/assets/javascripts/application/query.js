@@ -4,7 +4,9 @@ formControls = {
   tags: {
     control: 'qb',
     modal: 'modal',
+    source: 'sourcesSelect',
     tables: 'tables',
+    table: 'tableSelect',
     content: 'qbcontent',
     contentData: 'qbcontentdata',
     columns: 'qbcolumns',
@@ -20,9 +22,10 @@ function wizardGenerator(prefix, element, modal, title, perform, parent){
   $.post('/wizard/connections',{
     connecitons: 'true'
   }).done(function(response) {
-    select_id = "select{prefix}sources".supplant({
+    select_id = "{prefix}{tag}".supplant({
+      tag: formControls.tags.source,
       prefix: sanitize(prefix)
-    })
+    });
     controlId = '{prefix}{tag}'.supplant({
       tag: formControls.tags.control,
       prefix: sanitize(prefix)
@@ -50,7 +53,7 @@ function wizardGenerator(prefix, element, modal, title, perform, parent){
     html+='\t\t\t<div class="modal-body">\n';
     html+='\t\t\t\t<div class="fields">\n'
     html+='\t\t\t\t\t<div class="two wide field">\n'
-    html+='\t\t\t\t\t\t<label id="{modal_id}Title">{title}</label>\n'.supplant({
+    html+='\t\t\t\t\t\t{title}\n'.supplant({
       title: title
     });
     html+='\t\t\t\t\t</div>\n'
@@ -110,12 +113,13 @@ function wizardGenerator(prefix, element, modal, title, perform, parent){
 
 function wizardContentGenerator(prefix, element, modal, perform){
   $.post('/wizard/tables', {
-    id: element.selectedIndex.value,
+    id: element.options[element.selectedIndex].value,
     data: false
   }).done(function (response) {
-    select_id = "select{prefix}tables".supplant({
+    select_id = "{prefix}{tag}".supplant({
+      tag: formControls.tags.table,
       prefix: sanitize(prefix)
-    })
+    });
     html = '\t<select class="{class}" name="{name}" onchange="wizardContentDataGenerator(\'{prefix}\', this, \'{modal}\', {perform})" multiple="true" id="{id}">\n'.supplant({
       name: prefixStr(prefix, "[tables][]"),
       class: "ui dropdown",
@@ -365,8 +369,14 @@ function insertBetweenInput(element, id, name){
 
 function simpleColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
-    // falta el source id
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = 'select{prefix}{counter}'.supplant({
       prefix: sanitize(prefix),
@@ -405,7 +415,14 @@ function simpleColumnGenerate(prefix, metadata){
 
 function functionColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -463,7 +480,14 @@ function functionColumnGenerate(prefix, metadata){
 
 function aliasColumnGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -529,7 +553,14 @@ function aliasColumnGenerate(prefix, metadata){
 
 function simpleConditionGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -589,7 +620,14 @@ function simpleConditionGenerate(prefix, metadata){
 
 function betweenConditionGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -643,7 +681,14 @@ function betweenConditionGenerate(prefix, metadata){
 
 function includeConditionGenerate2(prefix, metadata, modal){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -703,7 +748,14 @@ function includeConditionGenerate2(prefix, metadata, modal){
 
 function groupGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -735,7 +787,14 @@ function groupGenerate(prefix, metadata){
 
 function havingGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -823,7 +882,14 @@ function havingGenerate(prefix, metadata){
 
 function orderGenerate(prefix, metadata){
   $.post('/wizard/columns', {
-    tables: metadata
+    tables: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.table,
+        prefix: sanitize(prefix)
+      })).val(),
+    id: $("#{prefix}{tag}".supplant({
+        tag: formControls.tags.source,
+        prefix: sanitize(prefix)
+      })).val()
   }).done(function (response) {
     select_id = "select{prefix}{counter}".supplant({
       prefix: sanitize(prefix),
@@ -878,6 +944,11 @@ function limitGenerate(prefix, metadata){
   document.getElementById(prefixStr(sanitize(prefix), formControls.tags.limit)).innerHTML = html;
 }
 
+
+
+function selectedOptions(element){
+  return 'deprecated';
+}
 
 function Remove(id) {
   document.getElementById(id).remove();
