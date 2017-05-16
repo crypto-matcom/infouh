@@ -1,23 +1,27 @@
 <div class="loc-top-100 container">
-  <%= form_tag wizard_test_path, class: "ui form" do %>
+  <%= form_tag wizard_test_path, class: "ui form", id: 'mainForm00' do %>
     <div id='example'></div>
     <div id='form_modals'></div>
   <% end %>
 
-  <%= render partial: 'partials/table'%>
+  <div class="" id="tableContainer00">
+    <%= render partial: 'partials/table' %>
+  </div>
 
 </div>
 <script type="text/javascript">
 
-wizardGenerator('query', 'example', 'form_modals', 'Build your query', true, 'none');
+wizardGenerator('query', 'example', 'form_modals', '<i class="wizard big icon"></i>', true, 'none');
 
-function includeConditionGenerate(prefix, metadata){
-  html = ''
-  return html
+function showTable(){
+  $.post('/wizard/perform',$('#mainForm00').serialize())
+   .done(function(response) {
+      console.log(response);
+      document.getElementById("tableContainer00").innerHTML = response;
+      $('table').attr('class','ui very basic collapsing celled table loc-width-100 loc-btn-60')
+    }).fail(function() {
+      console.log("fAIL");
+    })
 }
 
 </script>
-
-<!-- <script type="text/javascript">
-  tabSetter();
-</script> -->

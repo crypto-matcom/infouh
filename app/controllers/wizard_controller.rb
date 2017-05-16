@@ -7,24 +7,39 @@ class WizardController < ApplicationController
   end
 
   def perform
+    sources = {}
+    Source.all.each { |e| sources["source#{e.id}"] = @queryWizard.ConnectionString(e.connectionInfo) }
+    data = @queryWizard.Run params[params[:prefix]], sources
 
+    ign = (0..100).map { |e| e }
+    xm = Builder::XmlMarkup.new(:indent => 2)
+    xm.table {
+      xm.tr { data[0].keys.select{|x| !ign.include?(x) }.each { |key| xm.th(key)}}
+      data.each { |row| xm.tr { row.each_pair { |key, value| xm.td(value) unless ign.include?(key) }}}
+    }
+    result = "#{xm}"
+
+
+    respond_to do |format|
+      format.json { render json: [result] }
+    end
   end
 
   def tables
-    source = @queryWizard.ConnectionString Source.find(params[:id]).connectionInfo
-    puts @queryWizard.GetTables(source)
+    sources = @queryWizard.ConnectionString Source.find(params[:id]).connectionInfo
+    puts @queryWizard.GetTables(sources)
     respond_to do |format|
-      format.json { render json: @queryWizard.GetTables(source) }
+      format.json { render json: @queryWizard.GetTables(sources) }
     end
   end
 
   def columns
-    source = @queryWizard.ConnectionString Source.find(params[:id]).connectionInfo
+    sources = @queryWizard.ConnectionString Source.find(params[:id]).connectionInfo
 
-    tables = params[:tables] == 'all' ? @queryWizard.GetTables(source) : params[:tables]
+    tables = params[:tables] == 'all' ? @queryWizard.GetTables(sources) : params[:tables]
 
     @columns = [
-      @queryWizard.GetTablesColumns(source,tables).map { |e| [e[:table], e[:columns].map { |f| [f.name, f.type] }] },
+      @queryWizard.GetTablesColumns(sources,tables).map { |e| [e[:table], e[:columns].map { |f| [f.name, f.type] }] },
       @queryWizard.SingleOperators.keys.map { |e| e },
       @queryWizard.SQLFunctions
     ]
@@ -41,8 +56,10 @@ class WizardController < ApplicationController
   end
 
   def test
-    source = @queryWizard.ConnectionString Source.all.first().connectionInfo
-    puts @queryWizard.ConformQuery source, params[params[:prefix]]
+    sources = {}
+    Source.all.each { |e| sources["source#{e.id}"] = @queryWizard.ConnectionString(e.connectionInfo) }
+    puts @queryWizard.ConformQuery @queryWizard.ConnectionString(Source.all.first.connectionInfo), params[params[:prefix]], sources
+    puts @queryWizard.Run params[params[:prefix]], sources
   end
 
 end

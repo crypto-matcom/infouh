@@ -94,11 +94,11 @@ function wizardGenerator(prefix, element, modal, title, perform, parent){
     html+='\t\t\t</div>\n';
     html+='\t\t\t<div class="modal-footer">\n';
     html+='\t\t\t\t<button type="button" class="{class}" data-dismiss="modal" onclick="ModalRefresh(\'{parent}\')">Hide</button>\n'.supplant({
-      class: "btn btn-secondary",
+      class: "ui button",
       parent: parent
     });
     if(perform){
-      html+='\t\t\t\t<input type="submit" class="btn btn-secondary">\n';
+      html+='\t\t\t\t<div class="ui button" data-dismiss="modal" onclick="showTable();">Submit</div>\n';
     }
     html+='\t\t\t</div>\n';
     html+='\t\t</div>\n';

@@ -177,6 +177,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  builder
   byebug
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
