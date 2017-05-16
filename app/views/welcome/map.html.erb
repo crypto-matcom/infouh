@@ -86,8 +86,10 @@
       iconColor: 'white'
 		});
 
+    show = false;
+
 		L.marker([<%= marker.lat %>, <%= marker.lng %>], {icon: marker}).addTo(map).on('click', function () {
-      document.getElementById('showAPP').click()
+      // document.getElementById('showAPP').click()
       document.getElementById('markerQuestions').innerHTML = ""
       document.getElementById('markerHeader').innerHTML = '<%= marker.name %>'
       document.getElementById('markerDescription').innerHTML = '<%= marker.description %>'
