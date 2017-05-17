@@ -29,7 +29,7 @@ class ConsultsController < ApplicationController
     respond_to do |format|
       if @consult.save
         format.html { redirect_to welcome_map_path, notice: 'Consult was successfully created.' }
-        format.json { render :show, status: :created, location: @consult }
+        format.json { render json: @consult }
       else
         format.html { render :new }
         format.json { render json: @consult.errors, status: :unprocessable_entity }

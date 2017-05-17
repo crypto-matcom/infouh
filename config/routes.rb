@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   root to: 'welcome#dashboard'
 
+  match 'map/addConsult' => 'map#addConsult', as: 'addConsult_marker', via: :post
+  match 'map/addQuestion' => 'map#addQuestion', as: 'addQuestion_marker', via: :post
   match 'map/create' => 'map#create', as: 'create_marker', via: :post
   match 'map/markers' => 'map#markers', as: 'markers', via: :post
 

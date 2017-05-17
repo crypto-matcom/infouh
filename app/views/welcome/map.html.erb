@@ -2,7 +2,7 @@
 
 <%= map(:center => {
   :latlng => [23.13600916719015, -82.38191485404968],
-  :zoom => 18
+  :zoom => 16
 }) %>
 
 <div id="sidebar" class="sidebar collapsed">
@@ -31,11 +31,12 @@
   <div class="sidebar-content">
     <div class="sidebar-pane" id="home">
       <h1 class="sidebar-header" id="markerHeader">
-
+        Select marker
       </h1>
       <br>
       <div id="markerDescription">
-
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <br><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
       </div>
       <br>
 
@@ -81,26 +82,52 @@
 
 <script type="text/javascript">
     <% @markers.each do |marker| %>
-		var marker = L.AwesomeMarkers.icon({
-		  markerColor: '<%= marker.color %>',
-      iconColor: 'white'
-		});
+    		var marker<%=marker.id%> = L.AwesomeMarkers.icon({
+    		  markerColor: '<%= marker.color %>',
+          iconColor: 'white'
+    		});
 
-    show = false;
+        show = false;
 
-		L.marker([<%= marker.lat %>, <%= marker.lng %>], {icon: marker}).addTo(map).on('click', function () {
-      // document.getElementById('showAPP').click()
-      document.getElementById('markerQuestions').innerHTML = ""
-      document.getElementById('markerHeader').innerHTML = '<%= marker.name %>'
-      document.getElementById('markerDescription').innerHTML = '<%= marker.description %>'
-      <% marker.consults.each do |consult| %>
-        html ="<form action='/welcome/show' method='post' class='ui form'>"
-        html+="<input type='hidden' name='query' value=\"<%= consult.code %>\">"
-        html+="<input type='hidden' name='id' value=\"<%= consult.source_id %>\">"
-        html+="<input type='submit' class='fluid ui button' value='<%= consult.name %>' style='background: white;'>"
-        html+="</form>"
-        $('#markerQuestions').append(html)
-      <% end %>
-	  });
+    		L.marker([<%= marker.lat %>, <%= marker.lng %>], {icon: marker<%=marker.id%>}).addTo(map).on('click', function () {
+          // document.getElementById('showAPP').click()
+
+          document.getElementById('markerHeader').innerHTML = '<%= marker.name %>'
+          document.getElementById('markerDescription').innerHTML = '<%= marker.description %>'
+
+            html = '<hr><h3>Questions:</h3>'
+          <% marker.consults.each do |consult| %>
+            html+="<form action='/welcome/show' method='post' class='ui form'>"
+            html+="<input type='hidden' name='query' value=\"<%= consult.code %>\">"
+            html+="<input type='hidden' name='id' value=\"<%= consult.source_id %>\">"
+            html+="<input type='submit' class='fluid ui button' value='<%= consult.name %>' style='background: transparent;'>"
+            html+="</form>"
+          <% end %>
+          html+='\t<a href="/welcome/question?id=<%= marker.id %>">Parametrics<i class="help large icon"></i></a><br><br>'
+          html+='\t<div class="ui accordion">'
+          html+='\t\t<div class="title">'
+          html+='\t\t\t<i class="dropdown icon"></i>'
+          html+='\t\t\tOther questions\n'
+          html+='\t\t</div>'
+          html+='\t\t<div class="content">\n'
+          <% Consult.where(marker_id: nil).each do |consult| %>
+            html+="<br><form action='/map/addConsult' method='post' class='ui form'>"
+            html+="<input type='hidden' name='query' value=\"<%= consult.id %>\">"
+            html+="<input type='hidden' name='id' value=\"<%= marker.id %>\">"
+            html+="<input type='submit' class='fluid ui button' value='<%= consult.name %>' style='background: transparent;'>"
+            html+="</form>"
+          <% end %>
+          <% Question.where(marker_id: nil).each do |consult| %>
+            html+="<br><form action='/map/addQuestion' method='post' class='ui form'>"
+            html+="<input type='hidden' name='query' value=\"<%= consult.id %>\">"
+            html+="<input type='hidden' name='id' value=\"<%= marker.id %>\">"
+            html+="<input type='submit' class='fluid ui button' value='<%= consult.name %>' style='background: transparent;'>"
+            html+="</form>"
+          <% end %>
+          html+='\t\t</div>\n'
+          html+='\t</div>\n'
+          document.getElementById('markerQuestions').innerHTML = html
+          $('.ui.accordion').accordion();
+    	  });
     <% end %>
 </script>

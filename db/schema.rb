@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516172756) do
+ActiveRecord::Schema.define(version: 20170516203434) do
 
   create_table "consults", force: :cascade do |t|
     t.string   "name"
@@ -33,17 +33,6 @@ ActiveRecord::Schema.define(version: 20170516172756) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "queries", force: :cascade do |t|
-    t.string   "name"
-    t.string   "data"
-    t.integer  "marker_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "source_id"
-    t.index ["marker_id"], name: "index_queries_on_marker_id"
-    t.index ["source_id"], name: "index_queries_on_source_id"
-  end
-
   create_table "questions", force: :cascade do |t|
     t.string   "name"
     t.integer  "source_id"
@@ -51,6 +40,8 @@ ActiveRecord::Schema.define(version: 20170516172756) do
     t.string   "query"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "marker_id"
+    t.index ["marker_id"], name: "index_questions_on_marker_id"
     t.index ["source_id"], name: "index_questions_on_source_id"
   end
 

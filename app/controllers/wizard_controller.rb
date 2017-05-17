@@ -55,10 +55,8 @@ class WizardController < ApplicationController
 
   def test
     sources = {}
-    puts params
     Source.all.each { |e| sources["source#{e.id}"] = @queryWizard.ConnectionString(e.connectionInfo) }
     query = @queryWizard.ConformQuery params[params[:prefix]], sources
-    puts query
     respond_to do |format|
       format.json { render json: [query] }
     end

@@ -1,3 +1,3 @@
 class Consult < ApplicationRecord
-  belongs_to :marker
+  belongs_to :marker, optional: true
 end

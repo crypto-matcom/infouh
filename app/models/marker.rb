@@ -1,4 +1,4 @@
 class Marker < ApplicationRecord
-  has_many :queries
+  has_many :questions
   has_many :consults
 end

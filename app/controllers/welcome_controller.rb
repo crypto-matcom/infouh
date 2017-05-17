@@ -17,7 +17,11 @@ class WelcomeController < ApplicationController
   end
 
   def question
-    @questions = Question.all
+    if params[:id]
+      @questions = Question.where(marker_id: params[:id])
+    else
+      @questions = Question.all
+    end
   end
 
   def map
