@@ -69,22 +69,22 @@ class QueryWizard
     end
 
     def Relation table, tables
-      relationships = []
-      tables.each do |t|
-        t["columns"].each do |c1|
-          table["columns"].each do |c2|
-            relationships << {
-              table: t["table"], column: c1::name,
-              query: "#{table["table"]} NATURAL JOIN #{t["table"]}"
-              } if NaturalJoin c1, c2
-            relationships << {
-              table: t["table"], column: c1::name,
-              query: "#{table["table"]} INNER JOIN #{t["table"]} ON #{table["table"]}.#{c1::name.Sufix} = #{t["table"]}.#{c1::name}"
-              } if InnerJoin table["table"], c1, c2
-          end
-        end
-      end
-      return relationships
+      # relationships = []
+      # tables.each do |t|
+      #   t["columns"].each do |c1|
+      #     table["columns"].each do |c2|
+      #       relationships << {
+      #         table: t["table"], column: c1::name,
+      #         query: "#{table["table"]} NATURAL JOIN #{t["table"]}"
+      #         } if NaturalJoin c1, c2
+      #       relationships << {
+      #         table: t["table"], column: c1::name,
+      #         query: "#{table["table"]} INNER JOIN #{t["table"]} ON #{table["table"]}.#{c1::name.Sufix} = #{t["table"]}.#{c1::name}"
+      #         } if InnerJoin table["table"], c1, c2
+      #     end
+      #   end
+      # end
+      # return relationships
     end
 
     def InnerJoin table, column1, column2 #Solve singularize
@@ -139,6 +139,9 @@ class QueryWizard
     end
 
     def TableBuilder connectionString, c
+      puts "\n\n\n\n\n=====================================\n\n\n\n\n"
+      puts RelationshipTable connectionString
+      puts "\n\n\n\n\n=====================================\n\n\n\n\n"
       c.first
     end
 
