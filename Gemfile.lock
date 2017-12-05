@@ -1,5 +1,5 @@
 GEM
-  remote: file:/home/linux/Documents/Rails/rubygems/
+  remote: http://172.17.0.1/index/rubygems/rubygems-updates/
   specs:
     actioncable (5.0.2)
       actionpack (= 5.0.2)
@@ -200,4 +200,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.12.5
+   1.14.6

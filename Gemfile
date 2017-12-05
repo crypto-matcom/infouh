@@ -1,6 +1,7 @@
 # You are using Sourcer.
 # Mantainer <a.caballero@estudiantes.matcom.uh.cu>
-source 'file:/home/linux/Documents/Rails/rubygems/'
+# source 'file:/home/linux/Documents/Rails/rubygems/'
+source 'http://172.17.0.1/index/rubygems/rubygems-updates'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
