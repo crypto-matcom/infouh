@@ -3,6 +3,7 @@ require 'digest'
 require 'active_record'
 
 class QueryWizard
+
   def initialize
     @_contexts = {}
   end
@@ -28,7 +29,18 @@ class QueryWizard
   end
 
   def Run options, connectionStrings
-    Query connectionStrings["source#{options["source"]}"], ConformQuery(options, connectionStrings)
+    sql = QueryBuilder(connectionStrings["source#{options["source"]}"], options, connectionStrings)
+
+    result = {}
+    result["data"] = Query connectionStrings["source#{options["source"]}"], sql
+    result["sql"] = sql
+
+    # puts result.to_s
+    return result
+  end
+
+  def RunSQL connectionStrings, source_id, sql
+    Query connectionStrings["source#{source_id}"], sql
   end
 
   def Query connectionString, sql
@@ -36,14 +48,9 @@ class QueryWizard
     @_contexts[connectionString.MD5].connection.execute sql
   end
 
-  # Deprecated
-  def ConformQuery options, connectionStrings = {}
-    QueryBuilder options, connectionStrings
-  end
-
-  def RelationshipTable connectionString
-    dbInfo = GetTablesColumns connectionString, GetTables(connectionString)
-    CreateRelationshipTable dbInfo
+  def RelationshipTable connectionString, chossenTables
+    dbInfo = GetTablesColumns connectionString, chossenTables
+    CreateRelationshipTable dbInfo, chossenTables
   end
 
   def ConnectionString options # {adapter, database, host, username, password}
@@ -64,32 +71,43 @@ class QueryWizard
       @counter += 1
     end
 
-    def CreateRelationshipTable dbInfo
-      dbInfo.map { |e| { table: e["table"], relationships: Relation(e, dbInfo) } }
+    def CreateRelationshipTable dbInfo, chossenTables
+      relations = {}
+      dbInfo.map { |e| relations[e[:table]] = Relation(e, dbInfo, chossenTables) }
+      return relations
     end
 
-    def Relation table, tables
-      # relationships = []
-      # tables.each do |t|
-      #   t["columns"].each do |c1|
-      #     table["columns"].each do |c2|
-      #       relationships << {
-      #         table: t["table"], column: c1::name,
-      #         query: "#{table["table"]} NATURAL JOIN #{t["table"]}"
-      #         } if NaturalJoin c1, c2
-      #       relationships << {
-      #         table: t["table"], column: c1::name,
-      #         query: "#{table["table"]} INNER JOIN #{t["table"]} ON #{table["table"]}.#{c1::name.Sufix} = #{t["table"]}.#{c1::name}"
-      #         } if InnerJoin table["table"], c1, c2
-      #     end
-      #   end
-      # end
-      # return relationships
+    def Relation table, tables, chossenTables
+
+      relationships = []
+      
+      tables.each do |t|
+        if (chossenTables.include? t[:table] and chossenTables.include? table[:table] and table[:table] != t[:table] )
+          t[:columns].each do |c1|
+            table[:columns].each do |c2|
+              # relationships << {
+              #   table: t["table"], column: c1::name,
+              #   query: "#{table["table"]} NATURAL JOIN #{t["table"]}"
+              #   } if NaturalJoin c1, c2
+              
+              relationships << {
+                table: t[:table],
+                query: "#{table[:table]} INNER JOIN %s ON #{table[:table]}.#{c2::name} = #{t[:table]}.#{c1::name}"
+                } if InnerJoin table[:table], c1, c2, t[:table]
+            end
+          end
+        end
+      end
+      return relationships
     end
 
-    def InnerJoin table, column1, column2 #Solve singularize
-      column1.table_name != table &&
-      column1.sql_type == column2.sql_type && column1.name.include?(column2.name) && column1.name.include?(table)
+    def InnerJoin table, column1, column2, table2
+      condition1 = column1.name.include?(column2.name) && table.include?(column1.name.removeId) 
+      condition2 = column2.name.include?(column1.name) && table2.include?(column2.name.removeId)
+      result = column1.table_name != table &&
+      column1.sql_type == column2.sql_type && ((condition1) or (condition2))
+
+      return result
     end
 
     def NaturalJoin column1, column2
@@ -98,23 +116,37 @@ class QueryWizard
       column1.sql_type == column2.sql_type && column1.name == column2.name
     end
 
-    def QueryBuilder options, connectionStrings = {}
-      [ SetColumns(options["columns"]), SetTables(connectionStrings["source#{options["source"]}"], options["tables"]),
-        SetConditions(options["conditions"], connectionStrings), SetGroups(options["groups"]),
-        SetHavings(options["having"]), SetOrders(options["orders"]),
-        SetLimits(options["limit"]) ].select { |e| e != nil }.join ' '
+    def QueryBuilder connectionString, options, connectionStrings = {}
+
+      [ SetColumns(options["columns"]), 
+        SetTables(connectionString, options["tables"]),
+        SetConditions(connectionString, options["conditions"], options["conditionSlider"], options["map_condition"], connectionStrings), 
+        SetGroups(options["groups"]),
+        SetHavings(options["having"]), 
+        SetOrders(options["orders"]),
+        SetLimits(options["limit"])
+      ].select { |e| e != nil }.join ' '
+
     end
 
     def SetColumns options
-      "SELECT #{ options == nil ? '*' : options.each_value.map { |e| ColumnBuilder e }.join(', ') }"
+      "SELECT #{ options.nil?? '*' : options.each_value.map { |e| ColumnBuilder e }.join(', ') }"
     end
 
     def SetTables c, options
-      "FROM #{ TableBuilder c, options }" if options != nil
+      "FROM #{ TableBuilder c, options }" unless options.nil?
     end
 
-    def SetConditions options, connectionStrings = {}
-      "WHERE #{options.each_value.map { |e| ConditionBuilder e, connectionStrings }.select {|x| x != nil }.join ' AND '}" if options != nil
+    def SetConditions c, options, slide, points, connectionStrings = {}
+      switch = slide.nil?? ' AND ' : ' OR '
+
+      if options != nil and points != nil
+        "WHERE #{options.each_value.map { |e| ConditionBuilder c, e, connectionStrings }.select {|x| x != nil }.join switch}" + " AND " + points 
+      elsif options != nil
+        "WHERE #{options.each_value.map { |e| ConditionBuilder c, e, connectionStrings }.select {|x| x != nil }.join switch}"
+      elsif points != nil
+        "WHERE" + points
+      end
     end
 
     def SetGroups options
@@ -138,14 +170,37 @@ class QueryWizard
       return "#{c["func"]}(#{c["column"]})#{" AS #{c["alias"]}" if c.key? "alias"}" if c["type"] == "function"
     end
 
-    def TableBuilder connectionString, c
-      puts "\n\n\n\n\n=====================================\n\n\n\n\n"
-      puts RelationshipTable connectionString
-      puts "\n\n\n\n\n=====================================\n\n\n\n\n"
-      c.first
+    def TableBuilder connectionString, options
+      relations = RelationshipTable connectionString, options
+      
+      return options[0] if options.length == 1
+      BuildRelate Clousure(options, relations).reverse, relations
     end
 
-    def ConditionBuilder c, connectionStrings
+    def BuildRelate options, relations
+      table = options.pop
+      return table if options.empty?
+      return relations[table].select{ |e| options.include? e[:table] }.first[:query] % "(#{BuildRelate(options, relations)})"
+    end
+
+    def Clousure tables, relations
+      tables.each do |e|
+        orders = []
+        begin
+          ordersLength = orders.length
+          tables.each do |t|
+            if orders.include? t
+              relations[t].each do |t2|
+                orders << t2[:table] unless orders.include? t2[:table]
+              end
+            end
+          end
+          return orders if orders.length == tables.length
+        end while orders.length != ordersLength
+      end
+    end
+
+    def ConditionBuilder connectionString, c, connectionStrings
       if c["type"] == "inclusion"
         if c["value_type"] == "query"
           result = Run c["value"], connectionStrings
@@ -198,6 +253,7 @@ class QueryWizard
 end
 
 class ParametricQuestion
+
   def initialize wizard
     @queryWizard = wizard
   end
@@ -282,5 +338,13 @@ class String
 
   def Sufix
     self.split('_')[-1]
+  end
+
+  def removeId
+    if self.include? 'Id' and self.length > 2
+      temp = self.split 'Id'
+      return temp.last
+    else return self
+    end
   end
 end
